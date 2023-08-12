@@ -4,6 +4,54 @@
   
     
     <entry>
+      <title>好用软件合集</title>
+      <link href="/tools/awesome-software/"/>
+      <url>/tools/awesome-software/</url>
+      
+        <content type="html"><![CDATA[<h1 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h1><ul><li>Mac终端四件套：<a href="https://iterm2.com/">iterms2</a>, <a href="https://brew.sh/">homebrew</a>, <a href="https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH">zsh</a>, <a href="https://ohmyz.sh/">oh my zsh</a></li><li>多语言环境配置：<a href="https://asdf-vm.com/">asdf</a><ul><li>Python多环境配置：<a href="https://www.anaconda.com/">Anaconda</a></li><li>Go多环境配置：<a href="https://github.com/go-nv/goenv">goenv</a></li></ul></li><li>数据库管理软件：<a href="https://sequel-ace.com/">Mac: Sequel Ace</a></li><li>编程利器：<a href="https://code.visualstudio.com/">Visual Studio Code</a>, <a href="https://www.jetbrains.com/">Jetbrains全家桶</a></li><li>虚拟化软件：<a href="https://www.docker.com/">Docker</a>, <a href="https://podman.io/">podman</a></li><li>远程连接：<a href="https://mobaxterm.mobatek.net/">MobaXterm</a></li><li>网络相关：<a href="https://www.wireshark.org/">Wireshark</a>, <a href="https://www.tcpdump.org/">tcpdump</a>, <a href="https://postman.com/">postman</a></li></ul><h1 id="效率"><a href="#效率" class="headerlink" title="效率"></a>效率</h1><ul><li>录屏软件：<a href="https://obsproject.com/">obs</a></li><li>截图软件：<a href="https://www.snipaste.com/">snipaste</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 软件 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>【Windows】WSL1安装</title>
+      <link href="/tutorial/Windows-install-WSL1/"/>
+      <url>/tutorial/Windows-install-WSL1/</url>
+      
+        <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><ul><li><p><code>WSL</code>能够直接在Windows下直接运行Linux子系统，就可以不用开虚拟机，速度较快</p></li><li><p><strong>以下方法安装的为WSL1</strong>，可自由选择安装路径，也可直接通过<code>Microsoft Store</code>安装，默认安装为WSL2（略有不同，等用到再去查）</p></li></ul><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><ol><li><p>修改Windows系统配置，按以下步骤开启对应功能</p><ol><li><p>找到<code>控制面板</code>，点击<code>程序</code></p><p><img src="/tutorial/Windows-install-WSL1/image-20211029091902550.png" alt="image-20211029091902550"></p></li><li><p>点击<code>启用或关闭Windows功能</code></p><p><img src="/tutorial/Windows-install-WSL1/image-20211029091933133.png" alt="image-20211029091933133"></p></li><li><p>勾选<code>使用于Linux的Windows子系统</code></p><p><img src="/tutorial/Windows-install-WSL1/image-20211029091958078.png" alt="image-20211029091958078"></p></li><li><p>完成后，系统会提示需要重启电脑，重启即可（不重启功能还没有配置好）</p></li><li><p>重启后，如果电脑没有网了，那么可能是禁用了<code>IPV4</code>，按以下步骤设置</p><ol><li><p>在<code>Windows设置-&gt;网络和Internet-&gt;更改适配器选项</code></p><p><img src="/tutorial/Windows-install-WSL1/image-20211029092314183.png" alt="image-20211029092314183"></p></li><li><p>找到电脑网卡，右键属性进入</p><p><img src="/tutorial/Windows-install-WSL1/image-20211029092401565.png" alt="image-20211029092401565"></p></li><li><p>勾选下图所示内容即可（其他不用改，保持默认即可）</p><p><img src="/tutorial/Windows-install-WSL1/image-20211029092432780.png" alt="image-20211029092432780"></p></li></ol></li></ol></li><li><p>去<a href="https://docs.microsoft.com/zh-cn/windows/wsl/install-manual">官网</a>下载wsl的appx镜像，比如下载的Ubuntu 18.04，往下拉找到<code>下载发行版</code>选择相应版本下载即可（</p><p><img src="/tutorial/Windows-install-WSL1/image-20211029091444638.png" alt="image-20211029091444638"></p></li><li><p>将下载的文件的后缀Appx改为zip，然后解压到你想要安装该wsl的位置</p><p><img src="/tutorial/Windows-install-WSL1/image-20211029091612239.png" alt="image-20211029091612239"></p></li><li><p>双击<code>ubuntu1804.exe</code>，它会自动在此目录下安装好ubuntu wsl，等待一会即可，过程中需要设置用户名和密码按照提示进行输入即可</p></li><li><p>查看安装成功的版本及WSL版本：<code>wsl -l -v</code></p><p><img src="/tutorial/Windows-install-WSL1/image-20220613091127732.png" alt="image-20220613091127732"></p></li></ol><h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ul><li>法一：用<code>win + r</code>输入<code>cmd</code>打开命令提示符，然后输入<code>bash</code>即可进入<code>Linux</code>终端</li><li>法二：<code>win + r</code>输入<code>bash</code></li></ul><p><img src="/tutorial/Windows-install-WSL1/image-20211029092714349.png" alt="image-20211029092714349"></p><h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="更新软件源"><a href="#更新软件源" class="headerlink" title="更新软件源"></a>更新软件源</h2><ol><li>修改<code>sudo vim /etc/apt/sources.list</code></li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">阿里源</span></span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure><ol start="2"><li>更新：<code>sudo apt update</code></li></ol><h1 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h1><ol><li>进入<code>cmd</code>：输入<code>wsl --list --all</code>查看已经安装的发行版本</li><li>输入<code>wslconfig /u [需要卸载名称]</code>进行卸载</li><li>因为我是纯净安装，为了避免出错，删除安装目录</li></ol><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li><a href="https://blog.csdn.net/qq_41601836/article/details/106610576">如何修改WSL的安装路径</a></li><li><a href="https://blog.csdn.net/m0_60028455/article/details/124800849">WSL2安装及配置图形界面</a></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 安装 </tag>
+            
+            <tag> Windows </tag>
+            
+            <tag> WSL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【Hexo】09-版本升级</title>
       <link href="/tutorial/Hexo-09-upgrade-hexo-version/"/>
       <url>/tutorial/Hexo-09-upgrade-hexo-version/</url>
@@ -163,9 +211,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> zsh </tag>
             
@@ -221,9 +269,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> vps </tag>
             
@@ -277,11 +325,11 @@
       
         <tags>
             
+            <tag> 安装 </tag>
+            
             <tag> Linux </tag>
             
             <tag> docker </tag>
-            
-            <tag> 安装 </tag>
             
         </tags>
       
@@ -360,9 +408,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> redis </tag>
             
@@ -389,9 +437,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> kafka </tag>
             
@@ -420,9 +468,9 @@
             
             <tag> MySQL </tag>
             
-            <tag> Linux </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
         </tags>
       
@@ -621,8 +669,6 @@
             
             <tag> Linux </tag>
             
-            <tag> Apache </tag>
-            
             <tag> Nginx </tag>
             
             <tag> Windows </tag>
@@ -630,6 +676,8 @@
             <tag> 网站 </tag>
             
             <tag> ISS </tag>
+            
+            <tag> Apache </tag>
             
         </tags>
       
@@ -656,9 +704,9 @@
             
             <tag> MySQL </tag>
             
-            <tag> Linux </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> Nginx </tag>
             
@@ -840,9 +888,9 @@
             
             <tag> 力扣 </tag>
             
-            <tag> 面试题 </tag>
-            
             <tag> dfs </tag>
+            
+            <tag> 面试题 </tag>
             
         </tags>
       
@@ -869,9 +917,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
             <tag> 面试题 </tag>
             
@@ -933,9 +981,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
         </tags>
       
@@ -987,9 +1035,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> 硬盘 </tag>
             
@@ -1043,11 +1091,11 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> Go </tag>
             
             <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
             
         </tags>
       
@@ -1130,9 +1178,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 树 </tag>
+            
+            <tag> 数组 </tag>
             
             <tag> Binary Indexed Tree </tag>
             
