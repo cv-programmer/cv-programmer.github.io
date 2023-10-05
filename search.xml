@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>【k8s】01-概述</title>
+      <link href="/cloud/k8s-01-Introduction/"/>
+      <url>/cloud/k8s-01-Introduction/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/cloud/k8s-01-Introduction/image-20231005151808653.png" alt="image-20231005151808653: https://www.youtube.com/watch?v=TlHvYWVUZyc"></p><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><ul><li><p>部署方式的演化，详见<a href="https://kubernetes.io/docs/concepts/overview/#going-back-in-time">kubernetes: Going back in time</a></p><p><img src="/cloud/k8s-01-Introduction/container_evolution.svg" alt="Deployment evolution: https://kubernetes.io/docs/concepts/overview/"></p></li><li><p>docker部署存在的问题</p><ul><li>不利于扩缩容&#x3D;&gt;需求变动导致部署机器变动时，需要手动维护</li><li>不利于管理&#x3D;&gt;部署基础镜像变更时，需要手动维护已部署的机器；负载均衡设计愈发复杂（当部署机器增多时，需要多层负载均衡机制）</li></ul><p><img src="/cloud/k8s-01-Introduction/image-20231005111347640.png" alt="image-20231005111347640: https://www.youtube.com/watch?v=7bA0gTroJjw"></p></li><li><p>k8s优点，详见<a href="https://kubernetes.io/docs/concepts/overview/#why-you-need-kubernetes-and-what-can-it-do">kubernetes: Why you need Kubernetes and what it can do</a></p><ul><li><strong>Service discovery and load balancing</strong></li><li><strong>Storage orchestration</strong></li><li><strong>Automated rollouts and rollbacks</strong></li><li><strong>Automatic bin packing</strong></li><li><strong>Self-healing</strong></li><li><strong>Secret and configuration management</strong></li></ul></li></ul><h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/cloud/k8s-01-Introduction/components-of-kubernetes.svg" alt="Components of Kubernetes: https://kubernetes.io/docs/concepts/overview/components/"></p><ul><li><p>一个Kubernetes集群至少包含一个控制平面(control plane)，以及一个或多个工作节点(worker node)</p></li><li><p><strong>控制平面(Control Plane) :</strong> 控制平面负责管理工作节点和维护集群状态。所有任务分配都来自于控制平面</p></li><li><p><strong>工作节点(Worker Node) :</strong> 工作节点负责执行由控制平面分配的请求任务,运行实际的应用和工作负载</p></li></ul><h3 id="Control-Plane"><a href="#Control-Plane" class="headerlink" title="Control Plane"></a>Control Plane</h3><p><img src="/cloud/k8s-01-Introduction/image-20231005134700376.png" alt="image-20231005134700376: https://www.youtube.com/watch?v=s_o8dwzRlu4"></p><h4 id="kube-apiserver"><a href="#kube-apiserver" class="headerlink" title="kube-apiserver"></a>kube-apiserver</h4><ul><li><p>如果需要与Kubernetes 集群进行交互，就要通过 API</p></li><li><p><code>apiserver</code>是 Kubernetes 控制平面的前端，用于处理内部和外部请求</p></li></ul><h4 id="kube-scheduler"><a href="#kube-scheduler" class="headerlink" title="kube-scheduler"></a>kube-scheduler</h4><ul><li><p>集群状况是否良好？如果需要创建新的容器，要将它们放在哪里？这些是调度程序需要关注的问题</p></li><li><p><code>scheduler</code>调度程序会考虑容器集的资源需求（例如 CPU 或内存）以及集群的运行状况。随后，它会将容器集安排到适当的计算节点</p></li></ul><h4 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h4><ul><li><a href="https://www.redhat.com/topics/containers/what-is-etcd">etcd</a>是一个键值对数据库，用于存储配置数据和集群状态信息</li></ul><h4 id="kube-controller-manager"><a href="#kube-controller-manager" class="headerlink" title="kube-controller-manager"></a>kube-controller-manager</h4><ul><li><p>控制器负责实际运行集群，<code>controller-manager</code>控制器管理器则是将多个控制器功能合而为一，降低了程序的复杂性。</p></li><li><p><code>controller-manager</code>包含了这些控制器：</p><ul><li>节点控制器（Node Controller）：负责在节点出现故障时进行通知和响应</li><li>任务控制器（Job Controller）：监测代表一次性任务的 Job 对象，然后创建 Pods 来运行这些任务直至完成</li><li>端点控制器（Endpoints Controller）：填充端点（Endpoints）对象（即加入 Service 与 Pod）</li><li>服务帐户和令牌控制器（Service Account &amp; Token Controllers）：为新的命名空间创建默认帐户和 API 访问令牌</li></ul></li></ul><h4 id="cloud-controller-manager"><a href="#cloud-controller-manager" class="headerlink" title="cloud-controller-manager"></a>cloud-controller-manager</h4><ul><li><p>控制平面还包含一个可选组件<code>cloud-controller-manager</code></p></li><li><p>云控制器管理器（Cloud Controller Manager）允许你将你的集群连接到云提供商的 API 之上， 并将与该云平台交互的组件同与你的集群交互的组件分离开来</p></li><li><p>如果在自己的环境中运行 Kubernetes，或者在本地计算机中运行学习环境， 所部署的集群不需要有云控制器管理器</p></li></ul><h3 id="Worker-Node"><a href="#Worker-Node" class="headerlink" title="Worker Node"></a>Worker Node</h3><p><img src="/cloud/k8s-01-Introduction/1665200584349-0e11b6d2-b3f3-49cf-9a7e-5effff7371d1.png" alt="image.png: https://www.yuque.com/wukong-zorrm/qdoy5p/lrsast"></p><h4 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h4><ul><li><p>kubelet 会在集群中每个<a href="https://kubernetes.io/docs/concepts/architecture/nodes/">节点（node）</a>上运行。 它保证<a href="https://kubernetes.io/docs/concepts/containers/">容器（containers）</a>都运行在 <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pod</a> 中</p></li><li><p>当control plane需要在节点中执行某个操作时，kubelet 就会执行该操作</p></li></ul><h4 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h4><ul><li><p><a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/">kube-proxy</a> 是集群中每个<a href="https://kubernetes.io/docs/concepts/architecture/nodes/">节点（node）</a>上运行的网络代理，是实现 Kubernetes <a href="https://kubernetes.io/docs/concepts/services-networking/service/">服务（Service）</a> 概念的一部分</p></li><li><p>kube-proxy 维护节点网络规则和转发流量，实现从集群内部或外部的网络与 Pod 进行网络通信</p></li></ul><h4 id="Container-Runtime"><a href="#Container-Runtime" class="headerlink" title="Container Runtime"></a>Container Runtime</h4><ul><li><p>Container Runtime（容器运行环境）是负责运行容器的软件</p></li><li><p>Kubernetes 支持许多容器运行环境，例如 <a href="https://containerd.io/docs/">containerd</a>、docker或者其他实现了 <a href="https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md">Kubernetes CRI (容器运行环境接口)</a>的容器</p></li></ul><h4 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h4><ul><li><strong>Pod</strong> 是包含一个或多个容器的容器组，是 Kubernetes 中创建和管理的最小对象</li><li>Pod 有以下特点：<ul><li>Pod是kubernetes中<strong>最小的调度单位（原子单元）</strong>，Kubernetes直接管理Pod而不是容器</li><li>同一个Pod中的容器总是会被自动安排到集群中的<strong>同一节点</strong>（物理机或虚拟机）上，并且<strong>一起调度</strong></li><li>Pod可以理解为运行特定应用的“逻辑主机”，这些容器共享存储、网络和配置声明(如资源限制)</li><li>每个 Pod 有唯一的 IP 地址。 <strong>IP地址分配给Pod</strong>，在同一个 Pod 内，所有容器共享一个 IP 地址和端口空间，Pod 内的容器可以使用<code>localhost</code>互相通信</li></ul></li></ul><h1 id="Kubectl"><a href="#Kubectl" class="headerlink" title="Kubectl"></a>Kubectl</h1><p><img src="/cloud/k8s-01-Introduction/1664245943047-a33242bd-b084-42ee-adbe-1d49514b147a.svg" width="50%/" label="https://www.yuque.com/wukong-zorrm/qdoy5p/uur3eh"><img src="/cloud/k8s-01-Introduction/image-20231005153927251.png" width="50%" label="https://www.youtube.com/watch?v=d6WC5n9G_sM"></p><ul><li><p><a href="https://kubernetes.io/docs/reference/kubectl/kubectl/">kubectl</a> 是一个kubernetes命令行工具</p></li><li><p>kubectl 使用 Kubernetes API 与 Kubernetes 集群的<a href="https://kubernetes.io/docs/reference/glossary/?all=true#term-control-plane">control plane</a>进行通信，可以使用 kubectl 部署应用程序、检查和管理群集资源以及查看日志</p></li></ul><h1 id="Workload"><a href="#Workload" class="headerlink" title="Workload"></a>Workload</h1><ul><li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployment</a>是对ReplicaSet和Pod更高级的抽象。它使Pod拥有多副本，自愈，扩缩容、滚动升级等能力</li><li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/">ReplicaSet</a>是一个Pod的集合。它可以设置运行Pod的数量，确保任何时间都有指定数量的 Pod 副本在运行。通常我们不直接使用ReplicaSet，而是在Deployment中声明</li><li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">statefulset</a>：主要用于持久化数据Pod管理</li><li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/">daemonset</a>：跟随node变化而自动生成和删除特定pod，如需要在每个node运行日志收集服务</li></ul><h1 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h1><p><img src="/cloud/k8s-01-Introduction/1664261419003-e9a5a68a-f988-48da-a51d-b8756bce8f24.png" alt="image.png"></p><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul><li><p>Service将运行在一组 <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a> 上的应用程序公开为网络服务的抽象方法</p></li><li><p>Service为一组 Pod 提供相同的 DNS 名，并且在它们之间进行负载均衡</p></li><li><p>Kubernetes 为 Pod 提供分配了IP 地址，但IP地址可能会发生变化</p></li><li><p>集群内的容器可以通过service名称访问服务，而不需要担心Pod的IP发生变化</p></li></ul><hr><ul><li><p>逻辑上的一组可以互相替换的 Pod，通常称为微服务</p></li><li><p>Service 对应的 Pod 集合通常是通过<a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Labels and Selectors</a>来确定的</p></li><li><p>举个例子，在一个Service中运行了3个nginx的副本。这些副本是可互换的，我们不需要关心它们调用了哪个nginx，也不需要关注 Pod的运行状态，只需要调用这个服务就可以了</p></li></ul><h2 id="Service对象（ServiceType-取值）"><a href="#Service对象（ServiceType-取值）" class="headerlink" title="Service对象（ServiceType 取值）"></a>Service对象（ServiceType 取值）</h2><ul><li><a href="https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip">ClusterIP</a>：将服务公开在集群内部。kubernetes会给服务分配一个集群内部的 IP，集群内的所有主机都可以通过这个Cluster-IP访问服务。集群内部的Pod可以通过service名称访问服务</li><li><a href="https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport">NodePort</a>：通过每个节点的主机IP 和静态端口（NodePort）暴露服务。 集群的外部主机可以使用节点IP和NodePort访问服务</li><li><a href="https://kubernetes.io/docs/concepts/services-networking/service/#externalname">ExternalName</a>：将集群外部的网络引入集群内部</li><li><a href="https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer">LoadBalancer</a>：使用云提供商的负载均衡器向外部暴露服务</li></ul><h1 id="config-yaml（声明式对象配置）"><a href="#config-yaml（声明式对象配置）" class="headerlink" title="config yaml（声明式对象配置）"></a>config yaml（声明式对象配置）</h1><h2 id="管理对象"><a href="#管理对象" class="headerlink" title="管理对象"></a>管理对象</h2><ul><li><p><strong>命令行指令</strong></p><ul><li><p>例如，使用<code>kubectl</code>命令来创建和管理 Kubernetes 对象</p></li><li><p>命令行就好比口头传达，简单、快速、高效</p></li><li><p>但它功能有限，不适合复杂场景，操作不容易追溯，多用于开发和调试</p></li></ul></li><li><p><strong>声明式配置</strong></p><ul><li><p>kubernetes使用yaml文件来描述 Kubernetes 对象</p></li><li><p>声明式配置就好比申请表，学习难度大且配置麻烦</p></li><li><p>好处是操作留痕，适合操作复杂的对象，多用于生产</p></li></ul></li></ul><h2 id="常用命令缩写"><a href="#常用命令缩写" class="headerlink" title="常用命令缩写"></a>常用命令缩写</h2><table><thead><tr><th align="center">名称</th><th align="center">缩写</th><th align="center">Kind</th></tr></thead><tbody><tr><td align="center">namespaces</td><td align="center">ns</td><td align="center">Namespace</td></tr><tr><td align="center">nodes</td><td align="center">no</td><td align="center">Node</td></tr><tr><td align="center">pods</td><td align="center">po</td><td align="center">Pod</td></tr><tr><td align="center">services</td><td align="center">svc</td><td align="center">Service</td></tr><tr><td align="center">deployments</td><td align="center">deploy</td><td align="center">Deployment</td></tr><tr><td align="center">replicasets</td><td align="center">rs</td><td align="center">ReplicaSet</td></tr><tr><td align="center">statefulsets</td><td align="center">sts</td><td align="center">StatefulSet</td></tr></tbody></table><h2 id="YAML规范"><a href="#YAML规范" class="headerlink" title="YAML规范"></a>YAML规范</h2><ul><li>缩进代表上下级关系</li><li><strong>缩进时不允许使用Tab键，只允许使用空格，通常缩进2个空格</strong></li><li><code>:</code> 键值对，后面必须有空格</li><li><code>-</code>列表，后面必须有空格</li><li><code>[ ]</code>数组</li><li><code>#</code>注释</li><li><code>|</code> 多行文本块</li><li><code>---</code>表示文档的开始，多用于分割多个资源对象</li></ul><h2 id="配置对象"><a href="#配置对象" class="headerlink" title="配置对象"></a>配置对象</h2><ul><li><p>在创建的 Kubernetes 对象所对应的 <code>yaml</code>文件中，需要配置的字段如下：</p><ul><li><code>apiVersion</code> -  Kubernetes API 的版本</li><li><code>kind</code> - 对象类别，例如<code>Pod</code>、<code>Deployment</code>、<code>Service</code>、<code>ReplicaSet</code>等</li><li><code>metadata</code> - 描述对象的元数据，包括一个 name 字符串、UID 和可选的 namespace</li><li><code>spec</code> - 对象的配置</li></ul></li><li><p>使用YAML配置pod,  <a href="https://kubernetes.io/docs/concepts/workloads/pods/#using-pods">kubernetes: Using Pods</a></p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my-pod.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.22</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure></li><li><p>使用yaml文件管理对象</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建对象</span></span><br><span class="line">kubectl apply -f my-pod.yaml</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">获取对象</span></span><br><span class="line">kubectl get pods</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编辑对象</span></span><br><span class="line">kubectl edit my-nginx</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除对象</span></span><br><span class="line">kubectl delete -f my-pod.yaml</span><br></pre></td></tr></table></figure></li></ul><h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><ul><li><p><strong>标签（Labels）</strong> 是附加到对象（比如 Pod）上的键值对，用于补充对象的描述信息</p></li><li><p>标签使用户能够以松散的方式管理对象映射，而无需客户端存储这些映射</p></li><li><p>由于一个集群中可能管理成千上万个容器，我们可以使用标签高效的进行选择和操作容器集合</p></li><li><p><strong>键的格式：</strong></p></li><li><ul><li><strong>前缀</strong>(可选)<strong>&#x2F;名称</strong>(必须)。</li></ul></li><li><p><strong>有效名称和值：</strong></p><ul><li><p>必须为 63 个字符或更少（可以为空）</p></li><li><p>如果不为空，必须以字母数字字符（[a-z0-9A-Z]）开头和结尾</p></li><li><p>包含破折号<code>-</code>、下划线<code>_</code>、点<code>.</code>和字母或数字</p></li></ul></li><li><p>YAML文件配置，<a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">kubernetes: Syntax and character set</a></p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">label-demo</span></span><br><span class="line">  <span class="attr">labels:</span> <span class="comment">#定义Pod标签</span></span><br><span class="line">    <span class="attr">environment:</span> <span class="string">test</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.22</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure></li></ul><h2 id="选择器"><a href="#选择器" class="headerlink" title="选择器"></a>选择器</h2><ul><li><p><strong>标签选择器</strong> 可以识别一组对象。标签不支持唯一性</p></li><li><p>标签选择器最常见的用法是为Service选择一组Pod作为后端</p></li><li><p>YMAL文件配置</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">selector:</span> <span class="comment">#与Pod的标签一致</span></span><br><span class="line">    <span class="attr">environment:</span> <span class="string">test</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">      <span class="comment"># 默认情况下，为了方便起见，`targetPort` 被设置为与 `port` 字段相同的值。</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">      <span class="comment"># 可选字段</span></span><br><span class="line">      <span class="comment"># 默认情况下，为了方便起见，Kubernetes 控制平面会从某个范围内分配一个端口号（默认：30000-32767）</span></span><br><span class="line">      <span class="attr">nodePort:</span> <span class="number">30007</span></span><br></pre></td></tr></table></figure></li><li><p>目前支持两种类型的选择运算：<strong>基于等值的</strong>和<strong>基于集合的</strong>。 多个选择条件使用逗号分隔，相当于<strong>And</strong>(&amp;&amp;)运算</p><ul><li><p>等值选择</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">selector:</span></span><br><span class="line">  <span class="attr">matchLabels:</span> <span class="comment"># component=redis &amp;&amp; version=7.0</span></span><br><span class="line">    <span class="attr">component:</span> <span class="string">redis</span></span><br><span class="line">    <span class="attr">version:</span> <span class="number">7.0</span></span><br></pre></td></tr></table></figure></li><li><p>集合选择</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">selector:</span></span><br><span class="line">  <span class="attr">matchExpressions:</span> <span class="comment"># tier in (cache, backend) &amp;&amp; environment not in (dev, prod)</span></span><br><span class="line">    <span class="bullet">-</span> &#123;<span class="attr">key:</span> <span class="string">tier</span>, <span class="attr">operator:</span> <span class="string">In</span>, <span class="attr">values:</span> [<span class="string">cache</span>, <span class="string">backend</span>]&#125;</span><br><span class="line">    <span class="bullet">-</span> &#123;<span class="attr">key:</span> <span class="string">environment</span>, <span class="attr">operator:</span> <span class="string">NotIn</span>, <span class="attr">values:</span> [<span class="string">dev</span>, <span class="string">prod</span>]&#125;</span><br></pre></td></tr></table></figure></li></ul></li></ul><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li><a href="https://kubernetes.io/">kubernetes官网</a></li><li>you need to learn Kubernetes RIGHT NOW!!，<a href="https://www.bilibili.com/video/BV1HC4y1o7RU/">B站</a>, <a href="https://www.youtube.com/watch?v=7bA0gTroJjw">youtube</a></li><li>Kubernetes入门90分钟精讲，<a href="https://www.bilibili.com/video/BV1k24y197KC/?vd_source=785f7b0e83a29d40ecff2373170d330e">bilibili</a>，<a href="https://www.yuque.com/wukong-zorrm/qdoy5p">document</a></li><li>Kubernetes Crash Course for Absolute Beginners [NEW]，<a href="https://www.youtube.com/watch?v=s_o8dwzRlu4">youtube</a></li><li>Kubernetes Explained in 6 Minutes | k8s Architecture，<a href="https://www.youtube.com/watch?v=TlHvYWVUZyc">youtube</a></li><li>Kubernetes Course - Full Beginners Tutorial (Containerize Your Apps!)，<a href="https://www.youtube.com/watch?v=d6WC5n9G_sM">youtube</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云原生 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云原生 </tag>
+            
+            <tag> k8s </tag>
+            
+            <tag> kubernetes </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>git squash与git rebase</title>
       <link href="/tools/The-trick-of-git-squash-rebase/"/>
       <url>/tools/The-trick-of-git-squash-rebase/</url>
@@ -338,9 +367,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> zsh </tag>
             
@@ -396,9 +425,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> vps </tag>
             
@@ -452,11 +481,11 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
             
             <tag> docker </tag>
+            
+            <tag> 安装 </tag>
             
         </tags>
       
@@ -535,9 +564,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> redis </tag>
             
@@ -564,9 +593,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> kafka </tag>
             
@@ -593,11 +622,11 @@
       
         <tags>
             
+            <tag> Linux </tag>
+            
             <tag> MySQL </tag>
             
             <tag> 安装 </tag>
-            
-            <tag> Linux </tag>
             
         </tags>
       
@@ -796,6 +825,8 @@
             
             <tag> Linux </tag>
             
+            <tag> Apache </tag>
+            
             <tag> Nginx </tag>
             
             <tag> Windows </tag>
@@ -803,8 +834,6 @@
             <tag> 网站 </tag>
             
             <tag> ISS </tag>
-            
-            <tag> Apache </tag>
             
         </tags>
       
@@ -829,11 +858,11 @@
       
         <tags>
             
+            <tag> Linux </tag>
+            
             <tag> MySQL </tag>
             
             <tag> 安装 </tag>
-            
-            <tag> Linux </tag>
             
             <tag> Nginx </tag>
             
@@ -1162,9 +1191,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> 硬盘 </tag>
             
@@ -1220,9 +1249,9 @@
             
             <tag> Go </tag>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
         </tags>
       
