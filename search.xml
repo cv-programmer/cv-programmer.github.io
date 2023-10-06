@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>container——未完成</title>
+      <link href="/cloud/container-and-container-runtime/"/>
+      <url>/cloud/container-and-container-runtime/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h1 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h1><h1 id="Container-Runtime"><a href="#Container-Runtime" class="headerlink" title="Container Runtime"></a>Container Runtime</h1><h1 id="Container-Runtime-Interface-CRI"><a href="#Container-Runtime-Interface-CRI" class="headerlink" title="Container Runtime Interface (CRI)"></a>Container Runtime Interface (CRI)</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li><p><a href="https://devopstales.github.io/kubernetes/container-runtimes/">Containers and Container runtimes for Beginners</a></p></li><li><p><a href="https://opensource.com/article/21/9/container-runtimes">What are container runtimes?</a></p></li><li><p><a href="https://www.devopsschool.com/blog/list-of-top-container-runtime-interface-projects/">What is Container Runtime Interface (CRI)?</a></p></li><li><p><a href="https://docs.openshift.com/container-platform/4.12/nodes/containers/nodes-containers-using.html">Understanding Containers</a></p></li><li><p><a href="https://www.capitalone.com/tech/cloud/container-runtime/">Kubernetes containers: A comprehensive runtime comparison</a></p></li><li><p><a href="https://cto.ai/blog/overview-of-different-container-runtimes/">Overview of Different Container Runtimes</a></p></li><li><p><a href="https://humalect.com/blog/container-runtimes">What are Container Runtimes &amp; 3 Types of Container Runtimes</a></p></li><li><p><a href="https://www.airplane.dev/blog/container-runtimes">Kubernetes container runtimes</a></p></li><li><p><a href="https://developers.redhat.com/blog/2018/02/22/container-terminology-practical-introduction">A Practical Introduction to Container Terminology</a></p></li><li><p><a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/">kubernetes: Container Runtimes</a></p></li><li><p><a href="https://www.aquasec.com/cloud-native-academy/container-security/container-runtime/">3 Types of Container Runtime and the Kubernetes Connection</a></p></li><li><p><a href="https://mp.weixin.qq.com/s/wNt9H3YD6rzqGP2FZSWk6Q">各种容器运行时都解决了什么问题</a></p></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云原生 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云原生 </tag>
+            
+            <tag> container </tag>
+            
+            <tag> container runtime </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【k8s】01-概述</title>
       <link href="/cloud/k8s-01-Introduction/"/>
       <url>/cloud/k8s-01-Introduction/</url>
@@ -622,9 +651,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> MySQL </tag>
+            
+            <tag> Linux </tag>
             
             <tag> 安装 </tag>
             
@@ -858,9 +887,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> MySQL </tag>
+            
+            <tag> Linux </tag>
             
             <tag> 安装 </tag>
             
@@ -982,13 +1011,13 @@
             
             <tag> 力扣 </tag>
             
-            <tag> 面试题 </tag>
-            
             <tag> 双指针 </tag>
             
             <tag> 哈希表 </tag>
             
             <tag> 滑动窗口 </tag>
+            
+            <tag> 面试题 </tag>
             
         </tags>
       
@@ -1073,9 +1102,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
             <tag> 面试题 </tag>
             
@@ -1137,9 +1166,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
         </tags>
       
@@ -1334,9 +1363,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 树 </tag>
+            
+            <tag> 数组 </tag>
             
             <tag> Binary Indexed Tree </tag>
             
