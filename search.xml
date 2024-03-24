@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>【terraform】02-快速开始</title>
+      <link href="/cloud/terraform-02-quick-start/"/>
+      <url>/cloud/terraform-02-quick-start/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h1><ul><li><p><a href="https://developer.hashicorp.com/terraform/install">Install Doc</a></p></li><li><p>Linux</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip</span><br><span class="line">unzip terraform_1.7.5_linux_amd64.zip</span><br><span class="line">mv terraform /usr/local/bin/</span><br><span class="line">terraform version</span><br></pre></td></tr></table></figure></li></ul><h1 id="HashiCorp-Configuration-Language-HCL"><a href="#HashiCorp-Configuration-Language-HCL" class="headerlink" title="HashiCorp Configuration Language (HCL)"></a>HashiCorp Configuration Language (HCL)</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;block&gt; &lt;parameters&gt; &#123;</span><br><span class="line">  key1 = value1</span><br><span class="line">  key2 = value2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="/cloud/terraform-02-quick-start/image-20240324111828041.png" alt="image-20240324111828041"></p><ul><li>Local Provider 文档可见 <a href="https://registry.terraform.io/providers/hashicorp/local/latest/docs">Local Provider</a></li></ul><h1 id="Simple-Case"><a href="#Simple-Case" class="headerlink" title="Simple Case"></a>Simple Case</h1><ul><li><p><code>local.tf</code></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">resource &quot;local_file&quot; &quot;hello&quot; &#123;</span><br><span class="line">    filename = &quot;../hello-terrafrom/hello.txt&quot;</span><br><span class="line">    content = &quot;hello world&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p><code>terraform init</code></p><p><img src="/cloud/terraform-02-quick-start/image-20240324174137663.png" alt="image-20240324174137663"></p></li><li><p><code>terraform plan</code></p><p><img src="/cloud/terraform-02-quick-start/image-20240324174239152.png" alt="image-20240324174239152"></p></li><li><p><code>tefform apply</code></p><p><img src="/cloud/terraform-02-quick-start/image-20240324174311669.png" alt="image-20240324174311669"></p></li><li><p><code>terraform show</code></p><p><img src="/cloud/terraform-02-quick-start/image-20240324175612805.png" alt="image-20240324175612805"></p></li><li><p><code>terraform destroy</code></p><p><img src="/cloud/terraform-02-quick-start/image-20240324200600716.png" alt="image-20240324200600716"></p></li></ul><h1 id="Terraform-Concepts"><a href="#Terraform-Concepts" class="headerlink" title="Terraform Concepts"></a>Terraform Concepts</h1><p><img src="/cloud/terraform-02-quick-start/image-20240324200904227.png" alt="image-20240324200904227"></p><h2 id="input-variables"><a href="#input-variables" class="headerlink" title="input variables"></a>input variables</h2><h3 id="variables-tf"><a href="#variables-tf" class="headerlink" title="variables.tf"></a>variables.tf</h3><p><img src="/cloud/terraform-02-quick-start/image-20240324201120735.png" alt="image-20240324201120735"></p><h3 id="variables-empty-in-variables-tf"><a href="#variables-empty-in-variables-tf" class="headerlink" title="variables empty in  variables.tf"></a>variables empty in  variables.tf</h3><p><img src="/cloud/terraform-02-quick-start/image-20240324202128085.png" alt="image-20240324202128085"></p><ul><li><p>interactive mode</p><p><img src="/cloud/terraform-02-quick-start/image-20240324202200917.png" alt="image-20240324202200917"></p></li><li><p>command line flags</p><p><img src="/cloud/terraform-02-quick-start/image-20240324202221246.png" alt="image-20240324202221246"></p></li><li><p>environment variables</p><p><img src="/cloud/terraform-02-quick-start/image-20240324202249183.png" alt="image-20240324202249183"></p></li><li><p>variable defination file</p><p><img src="/cloud/terraform-02-quick-start/image-20240324202406524.png" alt="image-20240324202406524"></p></li></ul><h3 id="Varivable-definition-precedence"><a href="#Varivable-definition-precedence" class="headerlink" title="Varivable definition precedence"></a>Varivable definition precedence</h3><p><img src="/cloud/terraform-02-quick-start/image-20240324202604670.png" alt="image-20240324202604670"></p><p><img src="/cloud/terraform-02-quick-start/image-20240324202617482.png" alt="image-20240324202617482"></p><h2 id="Resource-Attribute-Reference"><a href="#Resource-Attribute-Reference" class="headerlink" title="Resource Attribute Reference"></a>Resource Attribute Reference</h2><p><img src="/cloud/terraform-02-quick-start/image-20240324203209622.png" alt="image-20240324203209622"></p><h2 id="Resource-Dependencies"><a href="#Resource-Dependencies" class="headerlink" title="Resource Dependencies"></a>Resource Dependencies</h2><p><img src="/cloud/terraform-02-quick-start/image-20240324203419226.png" alt="image-20240324203419226"></p><p><img src="/cloud/terraform-02-quick-start/image-20240324203507611.png" alt="image-20240324203507611"></p><h2 id="output-variables"><a href="#output-variables" class="headerlink" title="output variables"></a>output variables</h2><p><img src="/cloud/terraform-02-quick-start/image-20240324203800353.png" alt="image-20240324203800353"></p><p><img src="/cloud/terraform-02-quick-start/image-20240324203909320.png" alt="image-20240324203909320"></p><h2 id="lifecycle"><a href="#lifecycle" class="headerlink" title="lifecycle"></a>lifecycle</h2><p><img src="/cloud/terraform-02-quick-start/image-20240324205704571.png" alt="image-20240324205704571"></p><h3 id="create-before-destroy"><a href="#create-before-destroy" class="headerlink" title="create_before_destroy"></a>create_before_destroy</h3><ul><li><p>before</p><p><img src="/cloud/terraform-02-quick-start/image-20240324205030729.png" alt="image-20240324205030729"></p></li><li><p>after</p><p><img src="/cloud/terraform-02-quick-start/image-20240324205109096.png" alt="image-20240324205109096"></p></li></ul><h3 id="prevent-destroy"><a href="#prevent-destroy" class="headerlink" title="prevent_destroy"></a>prevent_destroy</h3><p><img src="/cloud/terraform-02-quick-start/image-20240324205255055.png" alt="image-20240324205255055"></p><h3 id="ignore-changes"><a href="#ignore-changes" class="headerlink" title="ignore_changes"></a>ignore_changes</h3><p><img src="/cloud/terraform-02-quick-start/image-20240324205645392.png" alt="image-20240324205645392"></p><h2 id="Data-source"><a href="#Data-source" class="headerlink" title="Data source"></a>Data source</h2><p><img src="/cloud/terraform-02-quick-start/image-20240324210150157.png" alt="image-20240324210150157"></p><h2 id="Resource-and-Data-source"><a href="#Resource-and-Data-source" class="headerlink" title="Resource and Data source"></a>Resource and Data source</h2><p><img src="/cloud/terraform-02-quick-start/image-20240324210253805.png" alt="image-20240324210253805"></p><h2 id="for-each"><a href="#for-each" class="headerlink" title="for_each"></a>for_each</h2><ul><li><p>loop in terraform</p><p><img src="/cloud/terraform-02-quick-start/image-20240324210652566.png" alt="image-20240324210652566"></p></li></ul><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul><li><a href="https://registry.terraform.io/">Terraform Registry</a></li><li><a href="https://kodekloud.com/courses/lab-terraform-for-beginners/?utm_source=YouTube&utm_medium=Video&utm_campaign=TerraformLabs">Lab – Terraform for Beginners</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云原生 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云原生 </tag>
+            
+            <tag> terraform </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>【terraform】01-概述</title>
+      <link href="/cloud/terraform-01-overview/"/>
+      <url>/cloud/terraform-01-overview/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Why-need"><a href="#Why-need" class="headerlink" title="Why need?"></a>Why need?</h1><h2 id="Traditional-IT-and-Challenges"><a href="#Traditional-IT-and-Challenges" class="headerlink" title="Traditional IT and Challenges"></a>Traditional IT and Challenges</h2><ul><li><p>传统的业务模式: 根据业务增长及下降 &#x3D;&gt; 制定架构 &#x3D;&gt; 按需采购 &#x3D;&gt; <strong>不同基础设施（系统，网络，存储等）自行部署</strong> &#x3D;&gt; 应用部署</p><p><img src="/cloud/terraform-01-overview/image-20240324095249773.png" alt="image-20240324095249773"></p></li><li><p>云时代解决方案: 根据业务增长及下降 &#x3D;&gt; 制定架构 &#x3D;&gt; 按需采购 &#x3D;&gt; <strong>使用 云厂商（AWS, Aliyun, Azure）提供的基础设施</strong> &#x3D;&gt; 应用部署</p><p><img src="/cloud/terraform-01-overview/image-20240324101628208.png" alt="image-20240324101628208"></p></li><li><p>尽管使用 云厂商 提供的服务，能够解决 传统业务模式的大部分问题（部署慢，运维价格高等），但是由于需要<strong>手工操作资源</strong>（通过界面或脚本等方式），仍然存在人为错误及非一致性的问题</p></li></ul><h1 id="What-is"><a href="#What-is" class="headerlink" title="What is?"></a>What is?</h1><h2 id="IaC"><a href="#IaC" class="headerlink" title="IaC"></a>IaC</h2><ul><li><p>通过代码的方式（shell，terraform等）操作云厂商提供的资源</p></li><li><p>常用 IaC 工具</p><p><img src="/cloud/terraform-01-overview/image-20240324102653913.png" alt="image-20240324102653913"></p></li></ul><h2 id="terraform"><a href="#terraform" class="headerlink" title="terraform"></a>terraform</h2><ul><li>封装了各云厂商的 API，通过 HCL 管理资源</li><li>执行幂等：相同内容多次执行最终结果一致</li></ul><h1 id="How-to-use"><a href="#How-to-use" class="headerlink" title="How to use?"></a>How to use?</h1><p><img src="/cloud/terraform-01-overview/image-20240324211004542.png" alt="image-20240324211004542"></p><ul><li>使用可见 <a href="/cloud/terraform-02-quick-start/" title="【terraform】02-快速开始">【terraform】02-快速开始</a></li></ul><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul><li><a href="https://developer.hashicorp.com/terraform">https://developer.hashicorp.com/terraform</a></li><li><a href="https://registry.terraform.io/">https://registry.terraform.io/</a></li><li><a href="https://www.youtube.com/watch?v=YcJ9IeukJL8">Terraform Tutorial for Beginners + Labs: Complete Step by Step Guide!</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云原生 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云原生 </tag>
+            
+            <tag> terraform </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【Harbor】02-日志</title>
       <link href="/cloud/harbor-02-log/"/>
       <url>/cloud/harbor-02-log/</url>
@@ -1531,9 +1585,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> Go </tag>
+            
+            <tag> Linux </tag>
             
             <tag> 安装 </tag>
             
