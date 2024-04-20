@@ -4,6 +4,77 @@
   
     
     <entry>
+      <title>对象存储工具</title>
+      <link href="/tools/The-tools-of-object-storage/"/>
+      <url>/tools/The-tools-of-object-storage/</url>
+      
+        <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul><li><p>目前使用过的 对象存储 有: <a href="https://aws.amazon.com/cn/s3/">Amazon S3</a>, <a href="https://www.aliyun.com/product/oss">阿里云对象存储 OSS</a> 及 <a href="https://docs.ceph.com/en/reef/">ceph</a>，其中 ceph 支持 S3- and Swift-compliant APIs</p></li><li><p>S3 使用 s3cmd</p></li><li><p>oss 使用 ossutil</p></li><li><p>ceph 使用 s3cmd, swift</p></li><li><p>下面介绍操作对象存储的工具</p></li></ul><h1 id="s3cmd"><a href="#s3cmd" class="headerlink" title="s3cmd"></a>s3cmd</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul><li>下载，可见 <a href="https://github.com/s3tools/s3cmd">s3cmd</a></li><li>Mac: <code>brew install s3cmd</code></li></ul><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ul><li><p>默认配置文件为 <code>~/.s3cfg</code></p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span>default<span class="punctuation">]</span></span><br><span class="line">access_key = AK</span><br><span class="line">secret_key = SK</span><br><span class="line">host_base = http<span class="punctuation">:</span><span class="comment">//ceph.abc.com</span></span><br><span class="line">host_bucket = abc</span><br><span class="line">use_https = False</span><br><span class="line">signature_v2 = True</span><br></pre></td></tr></table></figure></li></ul><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ul><li>查看 bucket 内容: <code>s3cmd ls s3://abc</code></li><li>查看 bucket 存储占用: <code>s3cmd du -H s3://abc</code></li><li>指定配置文件，并查看内容: <code>s3cmd -c ~/.s3cfg-hello ls s3://def</code></li></ul><h1 id="ossutil"><a href="#ossutil" class="headerlink" title="ossutil"></a>ossutil</h1><h2 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h2><ul><li>下载，可见 <a href="https://help.aliyun.com/zh/oss/developer-reference/overview-59">ossutil概述</a></li><li>Mac: <code>wget https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil-v1.7.19-mac-arm64.zip</code>。下载特定版本，解压即可</li><li>Linux: <code>curl https://gosspublic.alicdn.com/ossutil/install.sh | sudo bash</code>，安装完成后，ossutil会安装到 <code>/usr/bin/</code> 目录下</li></ul><h2 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h2><ul><li><code>ossutil config</code> 或在 <code>~/.ossutilconfig</code> 中手动配置</li></ul><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span>Credentials<span class="punctuation">]</span></span><br><span class="line">language=CH</span><br><span class="line">accessKeyID = AK</span><br><span class="line">accessKeySecret = SK</span><br><span class="line">endpoint = https<span class="punctuation">:</span><span class="comment">//oss-cn-shanghai.aliyuncs.com</span></span><br></pre></td></tr></table></figure><h2 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h2><ul><li>查看 bucket 内容: <code>ossutil ls oss://abc</code></li></ul><h1 id="swift"><a href="#swift" class="headerlink" title="swift"></a>swift</h1><h2 id="安装-2"><a href="#安装-2" class="headerlink" title="安装"></a>安装</h2><ul><li><code>pip install python-swiftclient</code></li></ul><h2 id="使用-2"><a href="#使用-2" class="headerlink" title="使用"></a>使用</h2><ul><li><p>查看所有容器: <code>swift list</code></p></li><li><p>查看容器 abc 下的对象: <code>swift list abc</code></p></li><li><p>查看容器 abc 下的对象 hello.zip 信息: <code>swift stat abc hello.zip</code>，如果不存在，会返回 404 错误</p></li><li><p>删除容器 abc 下的对象 hello.zip: <code>swift delete abc hello.zip</code></p></li><li><p>在 Python 中使用</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> swiftclient</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_swift</span>(<span class="params">container_name</span>):</span><br><span class="line">    auth_url = os.environ[<span class="string">&#x27;ST_AUTH&#x27;</span>]</span><br><span class="line">    auth_user = os.environ[<span class="string">&#x27;ST_USER&#x27;</span>]</span><br><span class="line">    auth_key = os.environ[<span class="string">&#x27;ST_KEY&#x27;</span>]</span><br><span class="line">    conn = swiftclient.Connection(authurl=auth_url, user=auth_user, key=auth_key)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> conn</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_object_stat</span>(<span class="params">conn, container_name, object_name</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn.head_object(container_name, object_name)</span><br><span class="line">        logging.info(<span class="string">&#x27;&#123;&#125; exists&#x27;</span>.<span class="built_in">format</span>(object_name))</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        logging.error(<span class="string">&#x27;&#123;&#125; not exists, err: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(object_name, e))</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">del_object</span>(<span class="params">conn, container_name, object_name</span>):</span><br><span class="line">    conn.delete_object(container_name, object_name)</span><br><span class="line">    logging.info(<span class="string">&#x27;&#123;&#125; deleted&#x27;</span>.<span class="built_in">format</span>(object_name))</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> object storage </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>在 Chrome 中使用 vim</title>
+      <link href="/tools/The-trick-of-vimium/"/>
+      <url>/tools/The-trick-of-vimium/</url>
+      
+        <content type="html"><![CDATA[<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><ul><li>基本使用与 vim 相同，可见 <a href="/tools/The-trick-of-vim/" title="vim使用说明">vim使用说明</a></li><li>安装后，快捷键优先级比网站自带命令高，比如 Github 全局搜索 <code>/</code>会被 vimium 占用</li><li>小写字母表示当前页面操作，大写字母表示打开新页面操作</li><li>官方文档可见 <a href="https://github.com/philc/vimium/blob/master/README.md">Vimium - The Hacker’s Browser</a></li></ul><h2 id="当前页面导航"><a href="#当前页面导航" class="headerlink" title="当前页面导航"></a>当前页面导航</h2><ul><li><code>?</code>: 显示命令</li><li><code>i</code>: 插入模式，使所有命令<strong>失效</strong>，<code>esc</code>后退出</li><li><code>/</code>: 页面内搜索</li><li><code>r</code>: 刷新页面</li><li><code>yy</code>: 粘贴当前页面 URL</li><li><code>p</code>: 在当前页面打开剪贴板 URL</li><li><code>P</code>：在新页面打开剪贴板 URL</li><li><code>gs</code>: 查看网页源代码</li><li><code>f</code>: 显示页面内链接快捷键，并在当前页面打开</li><li><code>F</code>: 显示页面内链接快捷键，并在新页面打开</li><li><code>t</code>: 创建新 tab</li></ul><h2 id="新页面导航"><a href="#新页面导航" class="headerlink" title="新页面导航"></a>新页面导航</h2><ul><li><code>o</code>:  当前页面打开 标签，书签及历史记录</li><li><code>O</code>: 新页面打开 标签，书签及历史记录</li><li><code>b</code>: 当前页面打开 书签</li><li><code>B</code>: 新页面打开 书签</li></ul><h2 id="标签页间操作"><a href="#标签页间操作" class="headerlink" title="标签页间操作"></a>标签页间操作</h2><ul><li><code>J</code>: 上一个 tab</li><li><code>K</code>: 下一个 tab</li><li><code>t</code>: 创建新 tab</li><li><code>x</code>: 关闭当前 tab</li><li><code>X</code>: 打开关闭的 tab</li><li><code>yt</code>: 复制当前 tab</li></ul><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li><p><a href="https://github.com/philc/vimium/blob/master/README.md">https://github.com/philc/vimium/blob/master/README.md</a></p></li><li><p><a href="https://sspai.com/post/27723">让你用 Chrome 上网快到想哭：Vimium</a></p></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> vimium </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>selenium 使用说明</title>
+      <link href="/tools/The-trick-of-selenium/"/>
+      <url>/tools/The-trick-of-selenium/</url>
+      
+        <content type="html"><![CDATA[<h1 id="selenium-安装及使用"><a href="#selenium-安装及使用" class="headerlink" title="selenium 安装及使用"></a>selenium 安装及使用</h1><ol><li><p>Python 安装: <code>pip install selenium</code></p></li><li><p>Mac 安装 chromedrive: <code>brew install chromedriver</code>，此时本机 Chrome 版本为 <code>123.0.6312.107（正式版本） (arm64)</code></p><p><img src="/tools/The-trick-of-selenium/image-20240407171451713.png" alt="image-20240407171451713"></p></li><li><p>测试可用性，如果能打开浏览器并进入对应网页即为可用</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver </span><br><span class="line"><span class="keyword">from</span> selenium.common.exceptions <span class="keyword">import</span> WebDriverException</span><br><span class="line">dirver = webdriver.Chrome()</span><br><span class="line">dirver.get(<span class="string">&#x27;https://www.baidu.com&#x27;</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        dirver.title</span><br><span class="line"><span class="keyword">except</span> WebDriverException:</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> selenium </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【Windows】docker 安装</title>
       <link href="/tutorial/Windows-install-docker-in-Windows/"/>
       <url>/tutorial/Windows-install-docker-in-Windows/</url>
@@ -406,9 +477,9 @@
       
         <tags>
             
-            <tag> MongoDB </tag>
-            
             <tag> 命令 </tag>
+            
+            <tag> MongoDB </tag>
             
         </tags>
       
@@ -633,7 +704,7 @@
       <link href="/tools/awesome-software/"/>
       <url>/tools/awesome-software/</url>
       
-        <content type="html"><![CDATA[<h1 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h1><ul><li>Mac终端四件套：<a href="https://iterm2.com/">iterms2</a>, <a href="https://brew.sh/">homebrew</a>, <a href="https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH">zsh</a>, <a href="https://ohmyz.sh/">oh my zsh</a></li><li>多语言环境配置：<a href="https://asdf-vm.com/">asdf</a><ul><li>Python多环境配置：<a href="https://www.anaconda.com/">Anaconda</a></li><li>Go多环境配置：<a href="https://github.com/go-nv/goenv">goenv</a></li></ul></li><li>数据库管理软件：<a href="https://sequel-ace.com/">Mac: Sequel Ace</a></li><li>编程利器：<a href="https://code.visualstudio.com/">Visual Studio Code</a>, <a href="https://www.jetbrains.com/">Jetbrains全家桶</a></li><li>虚拟化软件：<a href="https://www.docker.com/">Docker</a>, <a href="https://podman.io/">podman</a></li><li>远程连接：<a href="https://mobaxterm.mobatek.net/">MobaXterm</a></li><li>网络相关：<a href="https://www.wireshark.org/">Wireshark</a>, <a href="https://www.tcpdump.org/">tcpdump</a>, <a href="https://postman.com/">postman</a></li></ul><h1 id="效率"><a href="#效率" class="headerlink" title="效率"></a>效率</h1><ul><li><p>录屏软件：<a href="https://obsproject.com/">obs</a></p></li><li><p>截图软件：<a href="https://www.snipaste.com/">snipaste</a></p></li><li><p>录制Gif软件: <a href="https://getkap.co/">Kap: Only Mac</a></p></li><li><p>JSON 格式化软件: <a href="https://jsonviewer.app/">JSON Viewer: Only Mac APP</a>, <a href="https://chromewebstore.google.com/detail/jsonview/gmegofmjomhknnokphhckolhcffdaihd?utm_source=ext_app_menu">JSONView: Chrome extension</a></p></li></ul>]]></content>
+        <content type="html"><![CDATA[<h1 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h1><ul><li>Mac终端四件套：<a href="https://iterm2.com/">iterms2</a>, <a href="https://brew.sh/">homebrew</a>, <a href="https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH">zsh</a>, <a href="https://ohmyz.sh/">oh my zsh</a></li><li>多语言环境配置：<a href="https://asdf-vm.com/">asdf</a><ul><li>Python多环境配置：<a href="https://www.anaconda.com/">Anaconda</a></li><li>Go多环境配置：<a href="https://github.com/go-nv/goenv">goenv</a></li></ul></li><li>数据库管理软件：<a href="https://sequel-ace.com/">Mac: Sequel Ace</a></li><li>编程利器：<a href="https://code.visualstudio.com/">Visual Studio Code</a>, <a href="https://www.jetbrains.com/">Jetbrains全家桶</a></li><li>虚拟化软件：<a href="https://www.docker.com/">Docker</a>, <a href="https://podman.io/">podman</a></li><li>远程连接：<a href="https://mobaxterm.mobatek.net/">MobaXterm</a></li><li>网络相关：<a href="https://www.wireshark.org/">Wireshark</a>, <a href="https://www.tcpdump.org/">tcpdump</a>, <a href="https://postman.com/">postman</a>, <a href="https://hoppscotch.com/download">hoppscotch</a></li></ul><h1 id="效率"><a href="#效率" class="headerlink" title="效率"></a>效率</h1><ul><li>录屏软件：<a href="https://obsproject.com/">obs</a></li><li>截图软件：<a href="https://www.snipaste.com/">snipaste</a></li><li>录制Gif软件: <a href="https://getkap.co/">Kap: Only Mac</a></li><li>JSON 格式化软件: <a href="https://jsonviewer.app/">JSON Viewer: Only Mac APP</a>, <a href="https://chromewebstore.google.com/detail/jsonview/gmegofmjomhknnokphhckolhcffdaihd?utm_source=ext_app_menu">JSONView: Chrome extension</a></li><li>剪切板历史: <a href="https://github.com/p0deje/Maccy">maccy</a></li><li>chrome 使用 vim: <a href="https://chromewebstore.google.com/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb?hl=zh-CN&utm_source=ext_sidebar">vimium</a></li></ul>]]></content>
       
       
       <categories>
@@ -865,11 +936,11 @@
       
         <tags>
             
+            <tag> Linux </tag>
+            
             <tag> NAT </tag>
             
             <tag> 内网穿透 </tag>
-            
-            <tag> Linux </tag>
             
         </tags>
       
@@ -1482,9 +1553,9 @@
       
         <tags>
             
-            <tag> 命令 </tag>
-            
             <tag> MySQL </tag>
+            
+            <tag> 命令 </tag>
             
         </tags>
       
@@ -1542,9 +1613,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 力扣 </tag>
+            
+            <tag> 数组 </tag>
             
             <tag> 面试题 </tag>
             
@@ -1606,9 +1677,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 力扣 </tag>
+            
+            <tag> 数组 </tag>
             
         </tags>
       
@@ -1803,9 +1874,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 树 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 树 </tag>
             
             <tag> Binary Indexed Tree </tag>
             
