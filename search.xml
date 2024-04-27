@@ -477,9 +477,9 @@
       
         <tags>
             
-            <tag> MongoDB </tag>
-            
             <tag> 命令 </tag>
+            
+            <tag> MongoDB </tag>
             
         </tags>
       
@@ -1522,13 +1522,13 @@
             
             <tag> 力扣 </tag>
             
-            <tag> 面试题 </tag>
-            
             <tag> 双指针 </tag>
             
             <tag> 哈希表 </tag>
             
             <tag> 滑动窗口 </tag>
+            
+            <tag> 面试题 </tag>
             
         </tags>
       
@@ -1553,9 +1553,9 @@
       
         <tags>
             
-            <tag> 命令 </tag>
-            
             <tag> MySQL </tag>
+            
+            <tag> 命令 </tag>
             
         </tags>
       
@@ -1642,9 +1642,9 @@
       
         <tags>
             
-            <tag> 域名 </tag>
-            
             <tag> hexo </tag>
+            
+            <tag> 域名 </tag>
             
             <tag> 加密 </tag>
             
@@ -1787,9 +1787,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> Go </tag>
+            
+            <tag> Linux </tag>
             
             <tag> 安装 </tag>
             
