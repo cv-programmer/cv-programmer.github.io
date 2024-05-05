@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Json Web Token (JWT)</title>
+      <link href="/network/JWT-Json-Web-Token/"/>
+      <url>/network/JWT-Json-Web-Token/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><ul><li><p>传统<strong>单体架构服务</strong>，比如 C&#x2F;S 架构，使用 cookie-session 的方式进行<strong>身份验证</strong>，流程如下所示</p><p><img src="/network/JWT-Json-Web-Token/image-20240502222446929.png" alt="image-20240502222446929"></p><center><a href="https://www.youtube.com/watch?v=7Q17ubqLfaM">（图片来源）</a></center><blockquote><p>HTTP&#x2F;HTTPS 协议本身是一种<strong>无状态的协议</strong>，而这就意味着如果用户向我们的应用提供了用户名和密码来进行用户认证，那么下一次请求时，用户还要再一次进行用户认证才行，因为根据 HTTP&#x2F;HTTPS 协议，我们并不能知道是哪个用户发出的请求，所以为了让我们的应用能识别是哪个用户发出的请求，我们只能在服务器存储一份用户登录的信息，这份登录信息会在响应时传递给浏览器，告诉其保存为 cookie，以便下次请求时发送给我们的应用，这样我们的应用就能识别请求来自哪个用户了,这就是传统的<strong>基于session认证</strong></p><p>HTTPS（Hypertext Transfer Protocol Secure）是一种通过加密和认证保护数据传输的安全协议，它确保了客户端和服务器之间的通信的机密性和完整性。虽然HTTPS提供了<strong>数据传输的安全性</strong>，但它并不直接解决身份验证和授权的问题。</p><p>HTTPS主要解决的是以下两个问题：</p><ol><li>保证通信的机密性：HTTPS使用加密技术对通信进行加密，以防止第三方窃听和篡改数据。这确保了数据在传输过程中的安全性。</li><li>服务器身份认证：HTTPS使用SSL&#x2F;TLS证书来验证服务器的身份。客户端会检查服务器的证书，确保其合法性和可信度。这样客户端就能确保它正在与预期的服务器建立安全连接，而不是受到中间人攻击。</li></ol><p>虽然HTTPS提供了通信的安全性和服务器身份认证，但它并没有提供一种机制来进行用户身份验证和授权。用户身份验证通常需要在用户登录时验证其凭据（如用户名和密码），而授权涉及确定用户是否具有执行特定操作或访问特定资源的权限。</p></blockquote></li></ul><ul><li>这样做存在的问题是<ul><li>Server 端需要记录 session，当 Client 增多后，Server 端需要记录的信息变多，内存开销增多</li><li>不利于 Server 横向扩展，用户认证之后，服务端使用 session 保存认证信息，那么要取到认证信息，只能访问同一台服务器，才能拿到授权的资源。这样<strong>在分布式应用上，就需要实现session共享机制，不方便集群应用</strong></li><li>因为 session 是基于 cookie 来进行用户识别的，cookie 如果被截获，用户就会很容易受到跨站请求伪造的攻击</li></ul></li></ul><h1 id="Json-Web-Token"><a href="#Json-Web-Token" class="headerlink" title="Json Web Token"></a>Json Web Token</h1><h2 id="What-is"><a href="#What-is" class="headerlink" title="What is ?"></a>What is ?</h2><blockquote><p>JWT（JSON Web Token）是一种用于<strong>身份验证和授权</strong>的开放标准。它被设计用于在网络应用、移动应用和服务之间安全地传输声明。JWT 提供了一种紧凑且自包含的方式来传输信息，这些信息被称为声明（claims）。JWT 通常由三个部分组成：<strong>头部（Header）、载荷（Payload）和签名（Signature）</strong>。</p><p>JWT 的主要目的是解决身份验证和授权的问题。在传统的身份验证方式中，服务器需要在每个请求中验证用户的身份，这通常需要查询数据库或其他存储系统。这种方式会增加服务器的负载和响应时间，并且不适合分布式系统。JWT 的出现解决了这些问题，它将用户的身份信息编码为一个安全的令牌，并在每个请求中将该令牌传递给服务器。服务器只需验证令牌的有效性，而无需查询数据库，从而提高了系统的性能和可扩展性。</p></blockquote><p><img src="/network/JWT-Json-Web-Token/jwt-arch.webp" alt="image-20240505152255437"></p><center><a href="https://arielweinberger.medium.com/json-web-token-jwt-the-only-explanation-youll-ever-need-cf53f0822f50">（图片来源）</a></center><h2 id="How-works"><a href="#How-works" class="headerlink" title="How works"></a>How works</h2><p>JWT 的工作原理如下：</p><ol><li>用户登录时，服务器验证用户的身份信息，并生成一个 JWT。</li><li>服务器将 JWT 发送给客户端，客户端通常将其存储在本地，如浏览器的 localStorage 或移动应用的本地存储。</li><li>客户端在后续的请求中将 JWT 包含在请求的头部或其他位置中发送给服务器。</li><li>服务器在接收到请求时，解析 JWT 并验证其签名，以确保令牌的完整性和真实性。</li><li>服务器可以使用 JWT 中的声明信息来验证用户的身份和权限，并根据需要进行授权操作。</li></ol><p><img src="/network/JWT-Json-Web-Token/image-20240505152255437.png" alt="image-20240505152255437"></p><center><a href="https://www.youtube.com/watch?v=7Q17ubqLfaM">（图片来源）</a></center><h1 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h1><ul><li><a href="https://jwt.io/introduction">https://jwt.io/introduction</a></li><li><a href="https://www.youtube.com/watch?v=7Q17ubqLfaM">yt: What Is JWT and Why Should You Use JWT</a></li><li><a href="https://blog.csdn.net/as15282235592/article/details/126694874">什么是JWT？？</a></li><li><a href="https://blog.angular-university.io/angular-jwt/">JWT: The Complete Guide to JSON Web Tokens</a></li><li><a href="https://www.youtube.com/watch?v=Y2H3DXDeS3Q">JWT Explained In Under 10 Minutes (JSON Web Tokens)</a>, <a href="https://arielweinberger.medium.com/json-web-token-jwt-the-only-explanation-youll-ever-need-cf53f0822f50">JSON Web Tokens (JWT) — the only explanation you will ever need</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JWT - Json Web Token </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>对象存储工具</title>
       <link href="/tools/The-tools-of-object-storage/"/>
       <url>/tools/The-tools-of-object-storage/</url>
@@ -477,9 +502,9 @@
       
         <tags>
             
-            <tag> 命令 </tag>
-            
             <tag> MongoDB </tag>
+            
+            <tag> 命令 </tag>
             
         </tags>
       
@@ -519,7 +544,7 @@
       <link href="/cloud/container-and-container-runtime/"/>
       <url>/cloud/container-and-container-runtime/</url>
       
-        <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h1 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h1><h1 id="Container-Runtime"><a href="#Container-Runtime" class="headerlink" title="Container Runtime"></a>Container Runtime</h1><h1 id="Container-Runtime-Interface-CRI"><a href="#Container-Runtime-Interface-CRI" class="headerlink" title="Container Runtime Interface (CRI)"></a>Container Runtime Interface (CRI)</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li><p><a href="https://devopstales.github.io/kubernetes/container-runtimes/">Containers and Container runtimes for Beginners</a></p></li><li><p><a href="https://opensource.com/article/21/9/container-runtimes">What are container runtimes?</a></p></li><li><p><a href="https://www.devopsschool.com/blog/list-of-top-container-runtime-interface-projects/">What is Container Runtime Interface (CRI)?</a></p></li><li><p><a href="https://docs.openshift.com/container-platform/4.12/nodes/containers/nodes-containers-using.html">Understanding Containers</a></p></li><li><p><a href="https://www.capitalone.com/tech/cloud/container-runtime/">Kubernetes containers: A comprehensive runtime comparison</a></p></li><li><p><a href="https://cto.ai/blog/overview-of-different-container-runtimes/">Overview of Different Container Runtimes</a></p></li><li><p><a href="https://humalect.com/blog/container-runtimes">What are Container Runtimes &amp; 3 Types of Container Runtimes</a></p></li><li><p><a href="https://www.airplane.dev/blog/container-runtimes">Kubernetes container runtimes</a></p></li><li><p><a href="https://developers.redhat.com/blog/2018/02/22/container-terminology-practical-introduction">A Practical Introduction to Container Terminology</a></p></li><li><p><a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/">kubernetes: Container Runtimes</a></p></li><li><p><a href="https://www.aquasec.com/cloud-native-academy/container-security/container-runtime/">3 Types of Container Runtime and the Kubernetes Connection</a></p></li><li><p><a href="https://mp.weixin.qq.com/s/wNt9H3YD6rzqGP2FZSWk6Q">各种容器运行时都解决了什么问题</a></p></li></ul>]]></content>
+        <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h1 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h1><h1 id="Container-Runtime"><a href="#Container-Runtime" class="headerlink" title="Container Runtime"></a>Container Runtime</h1><h1 id="Container-Runtime-Interface-CRI"><a href="#Container-Runtime-Interface-CRI" class="headerlink" title="Container Runtime Interface (CRI)"></a>Container Runtime Interface (CRI)</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li><a href="https://devopstales.github.io/kubernetes/container-runtimes/">Containers and Container runtimes for Beginners</a></li><li><a href="https://opensource.com/article/21/9/container-runtimes">What are container runtimes?</a></li><li><a href="https://www.devopsschool.com/blog/list-of-top-container-runtime-interface-projects/">What is Container Runtime Interface (CRI)?</a></li><li><a href="https://docs.openshift.com/container-platform/4.12/nodes/containers/nodes-containers-using.html">Understanding Containers</a></li><li><a href="https://www.capitalone.com/tech/cloud/container-runtime/">Kubernetes containers: A comprehensive runtime comparison</a></li><li><a href="https://cto.ai/blog/overview-of-different-container-runtimes/">Overview of Different Container Runtimes</a></li><li><a href="https://humalect.com/blog/container-runtimes">What are Container Runtimes &amp; 3 Types of Container Runtimes</a></li><li><a href="https://www.airplane.dev/blog/container-runtimes">Kubernetes container runtimes</a></li><li><a href="https://developers.redhat.com/blog/2018/02/22/container-terminology-practical-introduction">A Practical Introduction to Container Terminology</a></li><li><a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/">kubernetes: Container Runtimes</a></li><li><a href="https://www.aquasec.com/cloud-native-academy/container-security/container-runtime/">3 Types of Container Runtime and the Kubernetes Connection</a></li><li><a href="https://mp.weixin.qq.com/s/wNt9H3YD6rzqGP2FZSWk6Q">各种容器运行时都解决了什么问题</a></li><li><a href="https://alexander.holbreich.org/docker-components-explained/">Docker components explained</a></li></ul>]]></content>
       
       
       <categories>
@@ -845,11 +870,11 @@
       
         <tags>
             
-            <tag> 转载 </tag>
+            <tag> 内网穿透 </tag>
             
             <tag> NAT </tag>
             
-            <tag> 内网穿透 </tag>
+            <tag> 转载 </tag>
             
         </tags>
       
@@ -938,9 +963,9 @@
             
             <tag> Linux </tag>
             
-            <tag> NAT </tag>
-            
             <tag> 内网穿透 </tag>
+            
+            <tag> NAT </tag>
             
         </tags>
       
@@ -1462,9 +1487,9 @@
       
         <tags>
             
-            <tag> IP </tag>
-            
             <tag> 域名 </tag>
+            
+            <tag> IP </tag>
             
             <tag> DNS </tag>
             
@@ -1522,13 +1547,13 @@
             
             <tag> 力扣 </tag>
             
+            <tag> 面试题 </tag>
+            
             <tag> 双指针 </tag>
             
             <tag> 哈希表 </tag>
             
             <tag> 滑动窗口 </tag>
-            
-            <tag> 面试题 </tag>
             
         </tags>
       
@@ -1553,9 +1578,9 @@
       
         <tags>
             
-            <tag> MySQL </tag>
-            
             <tag> 命令 </tag>
+            
+            <tag> MySQL </tag>
             
         </tags>
       
@@ -1613,9 +1638,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 力扣 </tag>
+            
+            <tag> 数组 </tag>
             
             <tag> 面试题 </tag>
             
@@ -1644,9 +1669,9 @@
             
             <tag> hexo </tag>
             
-            <tag> 域名 </tag>
-            
             <tag> 加密 </tag>
+            
+            <tag> 域名 </tag>
             
             <tag> Cloudflare </tag>
             
@@ -1677,9 +1702,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 力扣 </tag>
+            
+            <tag> 数组 </tag>
             
         </tags>
       
@@ -1787,11 +1812,11 @@
       
         <tags>
             
-            <tag> Go </tag>
-            
             <tag> Linux </tag>
             
             <tag> 安装 </tag>
+            
+            <tag> Go </tag>
             
         </tags>
       
@@ -1816,9 +1841,9 @@
       
         <tags>
             
-            <tag> Go </tag>
-            
             <tag> 安装 </tag>
+            
+            <tag> Go </tag>
             
             <tag> Windows </tag>
             
@@ -1874,9 +1899,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 树 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 树 </tag>
             
             <tag> Binary Indexed Tree </tag>
             
