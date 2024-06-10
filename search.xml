@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>【Go】05-goroutine</title>
+      <link href="/codeLang/Go-05-goroutine/"/>
+      <url>/codeLang/Go-05-goroutine/</url>
+      
+        <content type="html"><![CDATA[<h1 id="goroutine-是什么"><a href="#goroutine-是什么" class="headerlink" title="goroutine 是什么"></a>goroutine 是什么</h1><ul><li>goroutine 是 Go 中并发执行逻辑的一种方式</li></ul><h1 id="goroutine-怎么用"><a href="#goroutine-怎么用" class="headerlink" title="goroutine 怎么用"></a>goroutine 怎么用</h1><h2 id="场景一-主进程中，并发执行两段逻辑"><a href="#场景一-主进程中，并发执行两段逻辑" class="headerlink" title="场景一: 主进程中，并发执行两段逻辑"></a>场景一: 主进程中，并发执行两段逻辑</h2><ul><li><p>使用 <code>go</code> 关键字，可以并发执行两个函数</p></li><li><p>需要使用 <code>sync.WaitGroup</code>，使主进程等待 goroutine 执行完毕</p></li><li><p>如下代码展示了，主进程中执行两个 goroutine 的情形，其中第一个 goroutine 使用 chan 捕获退出信号（优雅退出）</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">&quot;fmt&quot;</span></span><br><span class="line"><span class="string">&quot;os&quot;</span></span><br><span class="line"><span class="string">&quot;os/signal&quot;</span></span><br><span class="line"><span class="string">&quot;sync&quot;</span></span><br><span class="line"><span class="string">&quot;syscall&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">wg.Add(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">defer</span> wg.Done()</span><br><span class="line">fmt.Println(<span class="string">&quot;first function start...&quot;</span>)</span><br><span class="line">quit := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line">signal.Notify(quit, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)</span><br><span class="line">sig := &lt;-quit</span><br><span class="line">fmt.Println(sig)</span><br><span class="line">    <span class="comment">// ctxWeb := web.Shutdown()</span></span><br><span class="line"><span class="comment">// &lt;-ctxWeb.Done()</span></span><br><span class="line">fmt.Println(<span class="string">&quot;first function end...&quot;</span>)</span><br><span class="line">&#125;()</span><br><span class="line">wg.Add(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">defer</span> wg.Done()</span><br><span class="line">fmt.Println(<span class="string">&quot;second function start...&quot;</span>)</span><br><span class="line">fmt.Println(<span class="string">&quot;second function end...&quot;</span>)</span><br><span class="line">&#125;()</span><br><span class="line">wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 编程语言 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Go </tag>
+            
+            <tag> goroutine </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Json Web Token (JWT)</title>
       <link href="/network/JWT-Json-Web-Token/"/>
       <url>/network/JWT-Json-Web-Token/</url>
@@ -1671,9 +1698,9 @@
             
             <tag> hexo </tag>
             
-            <tag> 加密 </tag>
-            
             <tag> Cloudflare </tag>
+            
+            <tag> 加密 </tag>
             
             <tag> SSL </tag>
             
