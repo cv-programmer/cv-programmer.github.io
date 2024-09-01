@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Json Web Token (JWT) | cv-programmer</title><meta name="keywords" content="JWT - Json Web Token"><meta name="author" content="cv-programmer"><meta name="copyright" content="cv-programmer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Background 传统单体架构服务，比如 C&#x2F;S 架构，使用 cookie-session 的方式进行身份验证，流程如下所示  （图片来源）   HTTP&#x2F;HTTPS 协议本身是一种无状态的协议，而这就意味着如果用户向我们的应用提供了用户名和密码来进行用户认证，那么下一次请求时，用户还要再一次进行用户认证才行，因为根据 HTTP&#x2F;HTTPS 协议，我们并不能知道是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Json Web Token (JWT)">
+<meta property="og:url" content="http://bh.ecel.top/network/JWT-Json-Web-Token/index.html">
+<meta property="og:site_name" content="cv-programmer">
+<meta property="og:description" content="Background 传统单体架构服务，比如 C&#x2F;S 架构，使用 cookie-session 的方式进行身份验证，流程如下所示  （图片来源）   HTTP&#x2F;HTTPS 协议本身是一种无状态的协议，而这就意味着如果用户向我们的应用提供了用户名和密码来进行用户认证，那么下一次请求时，用户还要再一次进行用户认证才行，因为根据 HTTP&#x2F;HTTPS 协议，我们并不能知道是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://bh.ecel.top/image/jwt.webp">
+<meta property="article:published_time" content="2024-05-02T14:10:48.000Z">
+<meta property="article:modified_time" content="2024-08-31T14:32:14.305Z">
+<meta property="article:author" content="cv-programmer">
+<meta property="article:tag" content="JWT - Json Web Token">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://bh.ecel.top/image/jwt.webp"><link rel="shortcut icon" href="/image/avatar.jpg"><link rel="canonical" href="http://bh.ecel.top/network/JWT-Json-Web-Token/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":10,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-31 22:32:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/image/avatar.jpg" onerror="onerror=null;src='/image/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/image/jwt.webp')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">cv-programmer</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Json Web Token (JWT)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-02T14:10:48.000Z" title="发表于 2024-05-02 22:10:48">2024-05-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-31T14:32:14.305Z" title="更新于 2024-08-31 22:32:14">2024-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><ul>
+<li><p>传统<strong>单体架构服务</strong>，比如 C&#x2F;S 架构，使用 cookie-session 的方式进行<strong>身份验证</strong>，流程如下所示</p>
+<p><img src="/network/JWT-Json-Web-Token/image-20240502222446929.png" alt="image-20240502222446929"></p>
+<center><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7Q17ubqLfaM">（图片来源）</a></center>
+
+<blockquote>
+<p>HTTP&#x2F;HTTPS 协议本身是一种<strong>无状态的协议</strong>，而这就意味着如果用户向我们的应用提供了用户名和密码来进行用户认证，那么下一次请求时，用户还要再一次进行用户认证才行，因为根据 HTTP&#x2F;HTTPS 协议，我们并不能知道是哪个用户发出的请求，所以为了让我们的应用能识别是哪个用户发出的请求，我们只能在服务器存储一份用户登录的信息，这份登录信息会在响应时传递给浏览器，告诉其保存为 cookie，以便下次请求时发送给我们的应用，这样我们的应用就能识别请求来自哪个用户了,这就是传统的<strong>基于session认证</strong></p>
+<p>HTTPS（Hypertext Transfer Protocol Secure）是一种通过加密和认证保护数据传输的安全协议，它确保了客户端和服务器之间的通信的机密性和完整性。虽然HTTPS提供了<strong>数据传输的安全性</strong>，但它并不直接解决身份验证和授权的问题。</p>
+<p>HTTPS主要解决的是以下两个问题：</p>
+<ol>
+<li>保证通信的机密性：HTTPS使用加密技术对通信进行加密，以防止第三方窃听和篡改数据。这确保了数据在传输过程中的安全性。</li>
+<li>服务器身份认证：HTTPS使用SSL&#x2F;TLS证书来验证服务器的身份。客户端会检查服务器的证书，确保其合法性和可信度。这样客户端就能确保它正在与预期的服务器建立安全连接，而不是受到中间人攻击。</li>
+</ol>
+<p>虽然HTTPS提供了通信的安全性和服务器身份认证，但它并没有提供一种机制来进行用户身份验证和授权。用户身份验证通常需要在用户登录时验证其凭据（如用户名和密码），而授权涉及确定用户是否具有执行特定操作或访问特定资源的权限。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>这样做存在的问题是<ul>
+<li>Server 端需要记录 session，当 Client 增多后，Server 端需要记录的信息变多，内存开销增多</li>
+<li>不利于 Server 横向扩展，用户认证之后，服务端使用 session 保存认证信息，那么要取到认证信息，只能访问同一台服务器，才能拿到授权的资源。这样<strong>在分布式应用上，就需要实现session共享机制，不方便集群应用</strong></li>
+<li>因为 session 是基于 cookie 来进行用户识别的，cookie 如果被截获，用户就会很容易受到跨站请求伪造的攻击</li>
+</ul>
+</li>
+</ul>
+<h1 id="Json-Web-Token"><a href="#Json-Web-Token" class="headerlink" title="Json Web Token"></a>Json Web Token</h1><h2 id="What-is"><a href="#What-is" class="headerlink" title="What is ?"></a>What is ?</h2><blockquote>
+<p>JWT（JSON Web Token）是一种用于<strong>身份验证和授权</strong>的开放标准。它被设计用于在网络应用、移动应用和服务之间安全地传输声明。JWT 提供了一种紧凑且自包含的方式来传输信息，这些信息被称为声明（claims）。JWT 通常由三个部分组成：<strong>头部（Header）、载荷（Payload）和签名（Signature）</strong>。</p>
+<p>JWT 的主要目的是解决身份验证和授权的问题。在传统的身份验证方式中，服务器需要在每个请求中验证用户的身份，这通常需要查询数据库或其他存储系统。这种方式会增加服务器的负载和响应时间，并且不适合分布式系统。JWT 的出现解决了这些问题，它将用户的身份信息编码为一个安全的令牌，并在每个请求中将该令牌传递给服务器。服务器只需验证令牌的有效性，而无需查询数据库，从而提高了系统的性能和可扩展性。</p>
+</blockquote>
+<p><img src="/network/JWT-Json-Web-Token/jwt-arch.webp" alt="image-20240505152255437"></p>
+<center><a target="_blank" rel="noopener" href="https://arielweinberger.medium.com/json-web-token-jwt-the-only-explanation-youll-ever-need-cf53f0822f50">（图片来源）</a></center>
+
+<h2 id="How-works"><a href="#How-works" class="headerlink" title="How works"></a>How works</h2><p>JWT 的工作原理如下：</p>
+<ol>
+<li>用户登录时，服务器验证用户的身份信息，并生成一个 JWT。</li>
+<li>服务器将 JWT 发送给客户端，客户端通常将其存储在本地，如浏览器的 localStorage 或移动应用的本地存储。</li>
+<li>客户端在后续的请求中将 JWT 包含在请求的头部或其他位置中发送给服务器。</li>
+<li>服务器在接收到请求时，解析 JWT 并验证其签名，以确保令牌的完整性和真实性。</li>
+<li>服务器可以使用 JWT 中的声明信息来验证用户的身份和权限，并根据需要进行授权操作。</li>
+</ol>
+<p><img src="/network/JWT-Json-Web-Token/image-20240505152255437.png" alt="image-20240505152255437"></p>
+<center><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7Q17ubqLfaM">（图片来源）</a></center>
+
+<h1 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://jwt.io/introduction">https://jwt.io/introduction</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7Q17ubqLfaM">yt: What Is JWT and Why Should You Use JWT</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/as15282235592/article/details/126694874">什么是JWT？？</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.angular-university.io/angular-jwt/">JWT: The Complete Guide to JSON Web Tokens</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Y2H3DXDeS3Q">JWT Explained In Under 10 Minutes (JSON Web Tokens)</a>, <a target="_blank" rel="noopener" href="https://arielweinberger.medium.com/json-web-token-jwt-the-only-explanation-youll-ever-need-cf53f0822f50">JSON Web Tokens (JWT) — the only explanation you will ever need</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">cv-programmer</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://bh.ecel.top/network/JWT-Json-Web-Token/">http://bh.ecel.top/network/JWT-Json-Web-Token/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://bh.ecel.top" target="_blank">cv-programmer</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JWT-Json-Web-Token/">JWT - Json Web Token</a></div><div class="post_share"><div class="social-share" data-image="/image/jwt.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/codeLang/Go-05-goroutine/"><img class="prev-cover" src="/image/go.jpeg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【Go】05-goroutine</div></div></a></div><div class="next-post pull-right"><a href="/tools/The-tools-of-object-storage/"><img class="next-cover" src="/image/Object-based-Storage.jpg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">对象存储工具</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/image/friend_404.gif'" alt="avatar"/><div class="author-info__name">cv-programmer</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cv-programmer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/cv-programmer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:usetologin@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Json-Web-Token"><span class="toc-number">2.</span> <span class="toc-text">Json Web Token</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is"><span class="toc-number">2.1.</span> <span class="toc-text">What is ?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How-works"><span class="toc-number">2.2.</span> <span class="toc-text">How works</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ref"><span class="toc-number">3.</span> <span class="toc-text">Ref</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理"><img src="/image/docker.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Docker】01-构建时 secret 处理"/></a><div class="content"><a class="title" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理">【Docker】01-构建时 secret 处理</a><time datetime="2024-08-17T07:37:36.000Z" title="发表于 2024-08-17 15:37:36">2024-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/tools/The-trick-of-kind/" title="kind 使用说明"><img src="/image/kind.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="kind 使用说明"/></a><div class="content"><a class="title" href="/tools/The-trick-of-kind/" title="kind 使用说明">kind 使用说明</a><time datetime="2024-07-28T08:41:40.000Z" title="发表于 2024-07-28 16:41:40">2024-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【TroubleShooting】Vmware 相关"/></a><div class="content"><a class="title" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关">【TroubleShooting】Vmware 相关</a><time datetime="2024-07-21T06:00:00.000Z" title="发表于 2024-07-21 14:00:00">2024-07-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门"><img src="/image/k8s.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【k8s】02-快速入门"/></a><div class="content"><a class="title" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门">【k8s】02-快速入门</a><time datetime="2024-06-23T05:04:27.000Z" title="发表于 2024-06-23 13:04:27">2024-06-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine"><img src="/image/go.jpeg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Go】05-goroutine"/></a><div class="content"><a class="title" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine">【Go】05-goroutine</a><time datetime="2024-05-03T02:51:56.000Z" title="发表于 2024-05-03 10:51:56">2024-05-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/image/jwt.webp')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By cv-programmer</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【Linux】MySQL安装 | cv-programmer</title><meta name="keywords" content="MySQL,Linux,安装"><meta name="author" content="cv-programmer"><meta name="copyright" content="cv-programmer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="说明 命令行安装以Ubuntu为例（WSL环境下） 编译安装以centos为例 为了选择特定版本及多版本使用，推荐源码编译安装 待完成  MySQL远程登录  Ubuntu编译安装  多版本切换：估计是在源码编译安装中设置my.cnf之后的步骤重做  添加链接：service和systemd    步骤命令行安装1234567891011121314151617181920212223242526">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux】MySQL安装">
+<meta property="og:url" content="http://bh.ecel.top/tutorial/Linux-install-MySQL-in-Linux/index.html">
+<meta property="og:site_name" content="cv-programmer">
+<meta property="og:description" content="说明 命令行安装以Ubuntu为例（WSL环境下） 编译安装以centos为例 为了选择特定版本及多版本使用，推荐源码编译安装 待完成  MySQL远程登录  Ubuntu编译安装  多版本切换：估计是在源码编译安装中设置my.cnf之后的步骤重做  添加链接：service和systemd    步骤命令行安装1234567891011121314151617181920212223242526">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://bh.ecel.top/image/linux.jpeg">
+<meta property="article:published_time" content="2022-12-23T00:06:03.000Z">
+<meta property="article:modified_time" content="2024-08-31T14:32:14.429Z">
+<meta property="article:author" content="cv-programmer">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="安装">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://bh.ecel.top/image/linux.jpeg"><link rel="shortcut icon" href="/image/avatar.jpg"><link rel="canonical" href="http://bh.ecel.top/tutorial/Linux-install-MySQL-in-Linux/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":10,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-31 22:32:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/image/avatar.jpg" onerror="onerror=null;src='/image/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/image/linux.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">cv-programmer</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【Linux】MySQL安装</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-12-23T00:06:03.000Z" title="发表于 2022-12-23 08:06:03">2022-12-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-31T14:32:14.429Z" title="更新于 2024-08-31 22:32:14">2024-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%99%E7%A8%8B/">教程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
+<li>命令行安装以<code>Ubuntu</code>为例（WSL环境下）</li>
+<li>编译安装以<code>centos</code>为例</li>
+<li>为了选择特定版本及多版本使用，推荐<a href="#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">源码编译安装</a></li>
+<li>待完成<ul>
+<li><input disabled type="checkbox"> <code>MySQL</code>远程登录</li>
+<li><input disabled type="checkbox"> <code>Ubuntu</code>编译安装</li>
+<li><input disabled type="checkbox"> 多版本切换：估计是在<a href="#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">源码编译安装</a>中设置<code>my.cnf</code>之后的步骤重做</li>
+<li><input disabled type="checkbox"> 添加链接：<code>service</code>和<code>systemd</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="命令行安装"><a href="#命令行安装" class="headerlink" title="命令行安装"></a>命令行安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">通过源安装MySQL</span></span><br><span class="line">sudo apt install mysql-server</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看状态并启动（重启）</span></span><br><span class="line">sudo service mysql status</span><br><span class="line">sudo service mysql restart</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">读取默认账密</span></span><br><span class="line">sudo cat /etc/mysql/debian.cnf</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## debian.cnf文件内容</span></span></span><br><span class="line">[client]</span><br><span class="line">host     = localhost</span><br><span class="line">user     = debian-sys-maint</span><br><span class="line">password = jnRrQlDQcIQzLDIL</span><br><span class="line">socket   = /var/run/mysqld/mysqld.sock</span><br><span class="line">[mysql_upgrade]</span><br><span class="line">host     = localhost</span><br><span class="line">user     = debian-sys-maint</span><br><span class="line">password = jnRrQlDQcIQzLDIL</span><br><span class="line">socket   = /var/run/mysqld/mysqld.sock</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## debian.cnf文件内容</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">登录</span></span><br><span class="line">mysql -udebian-sys-maint -pjnRrQlDQcIQzLDIL</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入后修改账密</span></span><br><span class="line">update mysql.user set authentication_string=password(&#x27;1&#x27;) where user =&#x27;root&#x27; and Host=&#x27;localhost&#x27;;</span><br><span class="line">update mysql.user set plugin = &#x27;mysql_native_password&#x27;;</span><br><span class="line">flush privileges;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用新账密登录</span></span><br><span class="line">mysql -uroot -p1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">退出，查看版本</span></span><br><span class="line">mysql --version</span><br></pre></td></tr></table></figure>
+
+<h2 id="源码编译安装"><a href="#源码编译安装" class="headerlink" title="源码编译安装"></a>源码编译安装</h2><ol>
+<li><p>下载相应安装包，<code>wget https://mirrors.tuna.tsinghua.edu.cn/mysql/downloads/MySQL-8.0/mysql-8.0.28-el7-x86_64.tar.gz</code>, 此处使用<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/mysql/downloads/MySQL-8.0/">清华镜像源</a></p>
+</li>
+<li><p>检查是否安装过<code>MySQL</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#### 查看是否有mysql依赖，为空则表示没有</span></span></span><br><span class="line">rpm -qa | grep mysql</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#### 如果有就卸载，xxx表示查出来的依赖</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">普通删除模式</span></span><br><span class="line">rpm -e xxx(mysql_libs)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">强力删除模式,如果上述命令删除时，提示有依赖其他文件，则可以用该命令对其进行强力删除</span></span><br><span class="line">rpm -e --nodeps xxx(mysql_libs)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查是否有<code>mariadb</code>：<code>rpm -qa | grep mariadb</code>, 有则卸载, 同<code>MySQL</code>卸载<br><img src="/tutorial/Linux-install-MySQL-in-Linux/check-mariadb.png"></p>
+</li>
+<li><p>安装<code>MySQL</code>依赖包：<code>yum install libaio</code></p>
+</li>
+<li><p>解压到指定路径, <code>sudo tar -zxvf mysql-8.0.28-el7-x86_64.tar.gz -C /opt</code></p>
+</li>
+<li><p>更名并移动至 <code>/usr/local</code>下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="built_in">mv</span> mysql-8.0.28-el7-x86_64 mysql</span><br><span class="line"><span class="built_in">mv</span> /opt/mysql/ /usr/local/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建数据库文件存放的文件夹。这个文件夹将来存放每个数据库的库文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/mysql</span><br><span class="line"><span class="built_in">mkdir</span> mysqldb</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MySQL</code>安装目录赋予权限：<code>chmod -R 777 /usr/local/mysql/</code></p>
+</li>
+<li><p>创建<code>MySQL</code>组和用户</p>
+<ul>
+<li>创建组：<code>groupadd mysql</code></li>
+<li>创建用户: <code>useradd -r -g mysql -s /bin/false mysql</code>(<code>-s /bin/false</code>参数指定<code>MySQL</code>用户仅拥有所有权，而没有登录权限)</li>
+<li>将用户添加到组中: <code>chown -R mysql:mysql ./</code></li>
+</ul>
+</li>
+<li><p>修改<code>MySQL</code>配置文件：<code>vim /etc/my.cnf</code>，如果没有文件就新建</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mysqld]</span></span><br><span class="line"><span class="comment"># 设置3306端口</span></span><br><span class="line"><span class="attr">port</span>=<span class="string">3306</span></span><br><span class="line"><span class="comment"># 设置mysql的安装目录</span></span><br><span class="line"><span class="attr">basedir</span>=<span class="string">/usr/local/mysql</span></span><br><span class="line"><span class="comment"># 设置mysql数据库的数据的存放目录</span></span><br><span class="line"><span class="attr">datadir</span>=<span class="string">/usr/local/mysql/mysqldb</span></span><br><span class="line"><span class="comment"># 允许最大连接数</span></span><br><span class="line"><span class="attr">max_connections</span>=<span class="string">10000</span></span><br><span class="line"><span class="comment"># 允许连接失败的次数。这是为了防止有人从该主机试图攻击数据库系统</span></span><br><span class="line"><span class="attr">max_connect_errors</span>=<span class="string">10</span></span><br><span class="line"><span class="comment"># 服务端使用的字符集默认为utf8mb4</span></span><br><span class="line"><span class="attr">character-set-server</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="comment"># 创建新表时将使用的默认存储引擎</span></span><br><span class="line"><span class="attr">default-storage-engine</span>=<span class="string">INNODB</span></span><br><span class="line"><span class="comment"># 默认使用“mysql_native_password”插件认证</span></span><br><span class="line"><span class="attr">default_authentication_plugin</span>=<span class="string">mysql_native_password</span></span><br><span class="line"><span class="attr">[mysql]</span></span><br><span class="line"><span class="comment"># 设置mysql客户端默认字符集</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="attr">[client]</span></span><br><span class="line"><span class="comment"># 设置mysql客户端连接服务端时默认使用的端口</span></span><br><span class="line"><span class="attr">port</span>=<span class="string">3306</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8mb4</span></span><br></pre></td></tr></table></figure></li>
+<li><p>进入<code>MySQL</code>安装目录下，安装<code>MySQL</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/mysql/bin/</span><br><span class="line">./bin/mysqld --initialize <span class="comment"># 生成初始密码，见下图终端（记住，后面登录MySQL需要）</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/tutorial/Linux-install-MySQL-in-Linux/mysql-init-ok.png"></p>
+</li>
+<li><p>启动<code>MySQL</code>服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/mysql/support-files</span><br><span class="line">./mysql.server start</span><br><span class="line"><span class="comment"># 如果第一次启动，当初始化执行会有报错，加权限，再次执行</span></span><br><span class="line"><span class="built_in">chmod</span> -R 777 /usr/local/mysql</span><br><span class="line">./mysql.server start</span><br></pre></td></tr></table></figure></li>
+<li><p>将<code>MySQL</code>添加到系统进程中：<code>cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld</code></p>
+</li>
+<li><p>设置<code>MySQL</code>自启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /etc/init.d/mysqld</span><br><span class="line">systemctl <span class="built_in">enable</span> mysqld</span><br></pre></td></tr></table></figure></li>
+<li><p>修改root用户登录密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/mysql/bin/</span><br><span class="line">./mysql -u root -p</span><br><span class="line"><span class="comment"># 修改账户密码为：root:passwd</span></span><br><span class="line">alter user <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;passwd&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>全局使用<code>MySQL</code>，加环境变量，并生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br><span class="line">PATH=<span class="variable">$&#123;PATH&#125;</span>:/usr/local/mysql/bin</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure></li>
+<li><p>全局使用：<code>mysql -uroot -p</code>，输入密码即可使用</p>
+</li>
+</ol>
+<h2 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h2><ul>
+<li>安装：<code>docker pull mysql</code></li>
+<li>启动：<code>docker run -d --name local-mysql -p 4561:3306 -e MYSQL_ROOT_PASSWORD=123 -e LANG=C.UTF-8 mysql </code></li>
+<li>进入容器：<code>docker exec -it local-mysql /bin/bash</code></li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/rainAndyou/article/details/117257449">Ubuntu18.04安装mysql</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41389482/article/details/109711389">Centos7环境下安装Mysql8详细教程(超详细，亲测百分百成功)</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">cv-programmer</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://bh.ecel.top/tutorial/Linux-install-MySQL-in-Linux/">http://bh.ecel.top/tutorial/Linux-install-MySQL-in-Linux/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://bh.ecel.top" target="_blank">cv-programmer</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E5%AE%89%E8%A3%85/">安装</a></div><div class="post_share"><div class="social-share" data-image="/image/linux.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/tutorial/Linux-install-kafka-in-Linux/"><img class="prev-cover" src="/image/linux.jpeg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【Linux】kafka安装</div></div></a></div><div class="next-post pull-right"><a href="/tutorial/Windows-install-oh-my-posh/"><img class="next-cover" src="/image/windows.jpeg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【Windows】oh my posh安装（Windows-Terminal）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/tutorial/Linux-bt-thinkphp/" title="【Linux】宝塔 + thinkphp"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-01</div><div class="title">【Linux】宝塔 + thinkphp</div></div></a></div><div><a href="/tutorial/Linux-build-my-vps/" title="VPS"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-26</div><div class="title">VPS</div></div></a></div><div><a href="/tutorial/Linux-install-Go-in-Linux/" title="【Linux】Go安装"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-07</div><div class="title">【Linux】Go安装</div></div></a></div><div><a href="/tutorial/Linux-install-docker-in-Linux/" title="【Linux】docker安装"><img class="cover" src="/image/docker.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-16</div><div class="title">【Linux】docker安装</div></div></a></div><div><a href="/tutorial/Linux-install-kafka-in-Linux/" title="【Linux】kafka安装"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-23</div><div class="title">【Linux】kafka安装</div></div></a></div><div><a href="/tutorial/Linux-install-redis-in-Linux/" title="【Linux】redis安装"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-23</div><div class="title">【Linux】redis安装</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/image/friend_404.gif'" alt="avatar"/><div class="author-info__name">cv-programmer</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cv-programmer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/cv-programmer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:usetologin@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text">命令行安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.</span> <span class="toc-text">源码编译安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%AE%89%E8%A3%85"><span class="toc-number">2.3.</span> <span class="toc-text">docker安装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理"><img src="/image/docker.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Docker】01-构建时 secret 处理"/></a><div class="content"><a class="title" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理">【Docker】01-构建时 secret 处理</a><time datetime="2024-08-17T07:37:36.000Z" title="发表于 2024-08-17 15:37:36">2024-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/tools/The-trick-of-kind/" title="kind 使用说明"><img src="/image/kind.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="kind 使用说明"/></a><div class="content"><a class="title" href="/tools/The-trick-of-kind/" title="kind 使用说明">kind 使用说明</a><time datetime="2024-07-28T08:41:40.000Z" title="发表于 2024-07-28 16:41:40">2024-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【TroubleShooting】Vmware 相关"/></a><div class="content"><a class="title" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关">【TroubleShooting】Vmware 相关</a><time datetime="2024-07-21T06:00:00.000Z" title="发表于 2024-07-21 14:00:00">2024-07-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门"><img src="/image/k8s.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【k8s】02-快速入门"/></a><div class="content"><a class="title" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门">【k8s】02-快速入门</a><time datetime="2024-06-23T05:04:27.000Z" title="发表于 2024-06-23 13:04:27">2024-06-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine"><img src="/image/go.jpeg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Go】05-goroutine"/></a><div class="content"><a class="title" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine">【Go】05-goroutine</a><time datetime="2024-05-03T02:51:56.000Z" title="发表于 2024-05-03 10:51:56">2024-05-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/image/linux.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By cv-programmer</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

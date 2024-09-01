@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【Linux】kafka安装 | cv-programmer</title><meta name="keywords" content="Linux,安装,kafka"><meta name="author" content="cv-programmer"><meta name="copyright" content="cv-programmer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="说明 以centos源码编译安装为例  步骤 安装JDK：sudo yum install -y java-1.8.0-openjdk 查看是否安装成功：java -version123openjdk version &quot;1.8.0_322&quot;OpenJDK Runtime Environment (build 1.8.0_322-b06)OpenJDK 64-Bit Server">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux】kafka安装">
+<meta property="og:url" content="http://bh.ecel.top/tutorial/Linux-install-kafka-in-Linux/index.html">
+<meta property="og:site_name" content="cv-programmer">
+<meta property="og:description" content="说明 以centos源码编译安装为例  步骤 安装JDK：sudo yum install -y java-1.8.0-openjdk 查看是否安装成功：java -version123openjdk version &quot;1.8.0_322&quot;OpenJDK Runtime Environment (build 1.8.0_322-b06)OpenJDK 64-Bit Server">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://bh.ecel.top/image/linux.jpeg">
+<meta property="article:published_time" content="2022-12-23T00:45:12.000Z">
+<meta property="article:modified_time" content="2024-08-31T14:32:14.432Z">
+<meta property="article:author" content="cv-programmer">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="安装">
+<meta property="article:tag" content="kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://bh.ecel.top/image/linux.jpeg"><link rel="shortcut icon" href="/image/avatar.jpg"><link rel="canonical" href="http://bh.ecel.top/tutorial/Linux-install-kafka-in-Linux/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":10,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-31 22:32:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/image/avatar.jpg" onerror="onerror=null;src='/image/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/image/linux.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">cv-programmer</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【Linux】kafka安装</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-12-23T00:45:12.000Z" title="发表于 2022-12-23 08:45:12">2022-12-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-31T14:32:14.432Z" title="更新于 2024-08-31 22:32:14">2024-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%99%E7%A8%8B/">教程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
+<li>以<code>centos</code>源码编译安装为例</li>
+</ul>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><ol>
+<li>安装<code>JDK</code>：<code>sudo yum install -y java-1.8.0-openjdk</code></li>
+<li>查看是否安装成功：<code>java -version</code><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openjdk version <span class="string">&quot;1.8.0_322&quot;</span></span><br><span class="line">OpenJDK Runtime Environment (build 1.8.0_322-b06)</span><br><span class="line">OpenJDK 64-Bit Server VM (build 25.322-b06, mixed mode)</span><br></pre></td></tr></table></figure></li>
+<li>配置Java环境变量<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##### 检查一下环境种是否有Java变量, 没有任何输出表示没有相应环境</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$JAVA_HOME</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##### 配置环境</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;JAVA_HOME=<span class="subst">$(readlink -f /usr/bin/java | sed <span class="string">&quot;s:bin/java::&quot;</span>)</span>&quot;</span> | sudo <span class="built_in">tee</span> -a /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="comment">##### 文件生效</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure></li>
+<li><a target="_blank" rel="noopener" href="https://kafka.apache.org/downloads">官网</a>下载<code>kafka</code>安装包，<code>wget https://dlcdn.apache.org/kafka/3.2.0/kafka_2.12-3.2.0.tgz</code></li>
+<li>解压到指定路径, <code>sudo tar -zvxf kafka_2.12-3.2.0.tgz -C  /opt/</code></li>
+<li>创建一个文件的软连接，这样可以方便进行<code>kafka</code>的升级, <code>sudo ln -s /opt/kafka_2.12-3.2.0 /opt/kafka</code></li>
+<li>进入<code>kafka</code>目录，启动<code>zookeeper</code>：<code>sudo bin/zookeeper-server-start.sh config/zookeeper.properties </code></li>
+<li>新开一个终端，进入<code>kafka</code>文件夹，启动<code>kafka</code>：<code>bin/kafka-server-start.sh config/server.properties</code></li>
+<li>配置系统单元服务进行启动<code>kafka</code>和<code>zookeeper</code><ul>
+<li><p>配置<code>zookeeper</code>:</p>
+<ul>
+<li>添加文件：<code>sudo vim /etc/systemd/system/zookeeper.service</code><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=<span class="string">Apache Zookeeper server</span></span><br><span class="line"><span class="attr">Documentation</span>=<span class="string">http://zookeeper.apache.org</span></span><br><span class="line"><span class="attr">Requires</span>=<span class="string">network.target remote-fs.target</span></span><br><span class="line"><span class="attr">After</span>=<span class="string">network.target remote-fs.target</span></span><br><span class="line"></span><br><span class="line"><span class="attr">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=<span class="string">simple</span></span><br><span class="line"><span class="attr">ExecStart</span>=<span class="string">/opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties</span></span><br><span class="line"><span class="attr">ExecStop</span>=<span class="string">/opt/kafka/bin/zookeeper-server-stop.sh</span></span><br><span class="line"><span class="attr">Restart</span>=<span class="string">on-abnormal</span></span><br><span class="line"><span class="attr">User</span>=<span class="string">root</span></span><br><span class="line"><span class="attr">Group</span>=<span class="string">root</span></span><br><span class="line"></span><br><span class="line"><span class="attr">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=<span class="string">multi-user.target</span></span><br></pre></td></tr></table></figure></li>
+<li>验证一下是否配置成功<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start zookeeper</span><br><span class="line">sudo systemctl status zookeeper</span><br><span class="line">sudo systemctl stop zookeeper</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>配置<code>kafka</code></p>
+<ul>
+<li><p>添加文件：<code>sudo vim /etc/systemd/system/kafka.service</code></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">   <span class="attr">[Unit]</span></span><br><span class="line">   <span class="attr">Description</span>=<span class="string">Apache Kafka Server</span></span><br><span class="line">   <span class="attr">Documentation</span>=<span class="string">http://kafka.apache.org/documentation.html</span></span><br><span class="line"><span class="attr">Requires</span>=<span class="string">zookeeper.service</span></span><br><span class="line">   </span><br><span class="line">   <span class="attr">[Service]</span></span><br><span class="line">   <span class="attr">Type</span>=<span class="string">simple</span></span><br><span class="line">   <span class="attr">ExecStart</span>=<span class="string">/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties</span></span><br><span class="line">   <span class="attr">ExecStop</span>=<span class="string">/opt/kafka/bin/kafka-server-stop.sh</span></span><br><span class="line">   <span class="attr">Restart</span>=<span class="string">on-abnormal</span></span><br><span class="line">   </span><br><span class="line">   <span class="attr">[Install]</span></span><br><span class="line">   <span class="attr">WantedBy</span>=<span class="string">multi-user.target</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证一下是否配置成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start kafka</span><br><span class="line">sudo systemctl status kafka</span><br><span class="line">sudo systemctl stop kafka</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>测试，生产者消费者发消息<ol>
+<li>进入到kafka目录下，通过下面命令创建一个kafka topic：<del><code>bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic testTopic</code></del> <code>bin/kafka-topics.sh --create -bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic testTopic</code><ul>
+<li>报错： <img src="/tutorial/Linux-install-kafka-in-Linux/kafka-error.png" alt="img"></li>
+<li>解决：使用 Kafka Broker的 <code>--bootstrap-server localhost:9092</code>来替代 <code>--zookeeper localhost:2181</code></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45865428/article/details/121264496">参考</a></li>
+</ul>
+</li>
+<li>查看创建了多少个topic: <del><code>bin/kafka-topics.sh --list --zookeeper localhost:2181</code></del> <code>bin/kafka-topics.sh --list --bootstrap-server localhost:9092</code><br><img src="/tutorial/Linux-install-kafka-in-Linux/kafka-testtopic.png" alt="img"></li>
+<li>通过生产者进行发送消息: <code>bin/kafka-console-producer.sh --broker-list localhost:9092 --topic testTopic</code></li>
+<li>创建一个消费者来进行接收消息: <code>bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic testTopic --from-beginning</code></li>
+<li>测试成功<br><img src="/tutorial/Linux-install-kafka-in-Linux/kafka-connet-ok.png" alt="img"></li>
+</ol>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Hackerman/p/12595246.html">centos 安装kafka</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/375091238">kafka安装教程	</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">cv-programmer</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://bh.ecel.top/tutorial/Linux-install-kafka-in-Linux/">http://bh.ecel.top/tutorial/Linux-install-kafka-in-Linux/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://bh.ecel.top" target="_blank">cv-programmer</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E5%AE%89%E8%A3%85/">安装</a><a class="post-meta__tags" href="/tags/kafka/">kafka</a></div><div class="post_share"><div class="social-share" data-image="/image/linux.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/tutorial/Linux-install-redis-in-Linux/"><img class="prev-cover" src="/image/linux.jpeg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【Linux】redis安装</div></div></a></div><div class="next-post pull-right"><a href="/tutorial/Linux-install-MySQL-in-Linux/"><img class="next-cover" src="/image/linux.jpeg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【Linux】MySQL安装</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/tutorial/Linux-bt-thinkphp/" title="【Linux】宝塔 + thinkphp"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-01</div><div class="title">【Linux】宝塔 + thinkphp</div></div></a></div><div><a href="/tutorial/Linux-build-my-vps/" title="VPS"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-26</div><div class="title">VPS</div></div></a></div><div><a href="/tutorial/Linux-install-Go-in-Linux/" title="【Linux】Go安装"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-07</div><div class="title">【Linux】Go安装</div></div></a></div><div><a href="/tutorial/Linux-install-MySQL-in-Linux/" title="【Linux】MySQL安装"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-23</div><div class="title">【Linux】MySQL安装</div></div></a></div><div><a href="/tutorial/Linux-install-docker-in-Linux/" title="【Linux】docker安装"><img class="cover" src="/image/docker.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-16</div><div class="title">【Linux】docker安装</div></div></a></div><div><a href="/tutorial/Linux-install-redis-in-Linux/" title="【Linux】redis安装"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-23</div><div class="title">【Linux】redis安装</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/image/friend_404.gif'" alt="avatar"/><div class="author-info__name">cv-programmer</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cv-programmer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/cv-programmer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:usetologin@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理"><img src="/image/docker.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Docker】01-构建时 secret 处理"/></a><div class="content"><a class="title" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理">【Docker】01-构建时 secret 处理</a><time datetime="2024-08-17T07:37:36.000Z" title="发表于 2024-08-17 15:37:36">2024-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/tools/The-trick-of-kind/" title="kind 使用说明"><img src="/image/kind.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="kind 使用说明"/></a><div class="content"><a class="title" href="/tools/The-trick-of-kind/" title="kind 使用说明">kind 使用说明</a><time datetime="2024-07-28T08:41:40.000Z" title="发表于 2024-07-28 16:41:40">2024-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【TroubleShooting】Vmware 相关"/></a><div class="content"><a class="title" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关">【TroubleShooting】Vmware 相关</a><time datetime="2024-07-21T06:00:00.000Z" title="发表于 2024-07-21 14:00:00">2024-07-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门"><img src="/image/k8s.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【k8s】02-快速入门"/></a><div class="content"><a class="title" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门">【k8s】02-快速入门</a><time datetime="2024-06-23T05:04:27.000Z" title="发表于 2024-06-23 13:04:27">2024-06-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine"><img src="/image/go.jpeg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Go】05-goroutine"/></a><div class="content"><a class="title" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine">【Go】05-goroutine</a><time datetime="2024-05-03T02:51:56.000Z" title="发表于 2024-05-03 10:51:56">2024-05-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/image/linux.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By cv-programmer</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

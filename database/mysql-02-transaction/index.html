@@ -1,0 +1,523 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【MySQL】02-事务 | cv-programmer</title><meta name="keywords" content="MySQL,事务,MVCC,redo log,undo log"><meta name="author" content="cv-programmer"><meta name="copyright" content="cv-programmer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="事务概念 是一种机制、一个操作序列，包含了一组数据库操作命令，并且把所有的命令作为一个整体一起向系统提交或撤销操作请求，即这一组数据库命令要么都执行，要么都不执行 是一个不可分割的工作逻辑单元，在数据库系统.上执行并发操作时，事务是最小的控制单元 适用于多用户同时操作的数据库系统的场景，如银行、保险公司及证券交易系统等等 通过事务的整体性以保证数据的一致性  特点ACID 原子性（Atomicit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【MySQL】02-事务">
+<meta property="og:url" content="http://bh.ecel.top/database/mysql-02-transaction/index.html">
+<meta property="og:site_name" content="cv-programmer">
+<meta property="og:description" content="事务概念 是一种机制、一个操作序列，包含了一组数据库操作命令，并且把所有的命令作为一个整体一起向系统提交或撤销操作请求，即这一组数据库命令要么都执行，要么都不执行 是一个不可分割的工作逻辑单元，在数据库系统.上执行并发操作时，事务是最小的控制单元 适用于多用户同时操作的数据库系统的场景，如银行、保险公司及证券交易系统等等 通过事务的整体性以保证数据的一致性  特点ACID 原子性（Atomicit">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://bh.ecel.top/image/mysql.jpeg">
+<meta property="article:published_time" content="2023-11-19T12:50:22.000Z">
+<meta property="article:modified_time" content="2024-08-31T14:32:14.290Z">
+<meta property="article:author" content="cv-programmer">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="事务">
+<meta property="article:tag" content="MVCC">
+<meta property="article:tag" content="redo log">
+<meta property="article:tag" content="undo log">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://bh.ecel.top/image/mysql.jpeg"><link rel="shortcut icon" href="/image/avatar.jpg"><link rel="canonical" href="http://bh.ecel.top/database/mysql-02-transaction/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":10,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-31 22:32:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/image/avatar.jpg" onerror="onerror=null;src='/image/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/image/mysql.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">cv-programmer</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【MySQL】02-事务</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-19T12:50:22.000Z" title="发表于 2023-11-19 20:50:22">2023-11-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-31T14:32:14.290Z" title="更新于 2024-08-31 22:32:14">2024-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
+<li>是一种机制、一个操作序列，包含了一组数据库操作命令，并且把所有的命令作为一个整体一起向系统提交或撤销操作请求，即<strong>这一组数据库命令要么都执行，要么都不执行</strong></li>
+<li>是一个不可分割的工作逻辑单元，在数据库系统.上执行并发操作时，事务是最小的控制单元</li>
+<li>适用于多用户同时操作的数据库系统的场景，如银行、保险公司及证券交易系统等等</li>
+<li>通过事务的整体性以保证数据的一致性</li>
+</ul>
+<h2 id="特点ACID"><a href="#特点ACID" class="headerlink" title="特点ACID"></a>特点ACID</h2><ul>
+<li>原子性（Atomicity）<ul>
+<li>事务是一个完整的操作，事务的各元素是不可分的</li>
+<li>事务中的所有元素必须作为一个整体提交或回滚</li>
+<li>如果事务中的任何元素失败，则整个事务将失败</li>
+</ul>
+</li>
+<li>一致性（Consistency）<ul>
+<li>在事务开始前，数据库中存储的数据处于一致状态</li>
+<li>当事务完成时，数据必须处于一致状态</li>
+<li>在正在进行的事务中，数据可能处于不一致的状态，当事务成功完成时，数据必须再次回到已知的一致状态</li>
+</ul>
+</li>
+<li>隔离性（Isolation）<ul>
+<li>对数据进行修改的所有并发事务是彼此隔离的，表明事务必须是独立的，它不应以任何方式依赖于或影响其他事务</li>
+<li>修改数据的事务可在另一个使用相同数据的事务开始之前访问这些数据，或者在另一个使用相同数据的事务结束之后访问这些数据</li>
+</ul>
+</li>
+<li>持久性（Durability）<ul>
+<li>指不管系统是否发生故障，事务处理的结果都是永久的</li>
+<li>一旦事务被提交，事务的效果会被永久地保留在数据库中</li>
+</ul>
+</li>
+<li>小节<ul>
+<li>原子性：指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生</li>
+<li>一致性：指在事务开始之前和事务结束以后，数据库的完整性约束没有被破坏</li>
+<li>隔离性：指在并发环境中，当不同的事务同时操纵相同的数据时，每个事务都有各自的完整数据空间</li>
+<li>持久性：在事务完成以后，该事务所对数据库所作的更改便持久的保存在数据库之中，并不会被回滚</li>
+<li>在事务管理中，原子性是基础，隔离性是手段，一致性是目的，持久性是结果</li>
+</ul>
+</li>
+<li><strong>InnoDB 引擎通过什么技术来保证事务的这四个特性的呢？</strong><ul>
+<li>持久性是通过 redo log （重做日志）来保证的</li>
+<li>原子性是通过 undo log（撤销日志） 来保证的</li>
+<li>隔离性是通过 MVCC（多版本并发控制） 或锁机制来保证的</li>
+<li>一致性则是通过持久性+原子性+隔离性来保证</li>
+</ul>
+</li>
+</ul>
+<h2 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h2><ul>
+<li>在事务的实现机制上，MySQL 采用的是 <code>WAL：Write-ahead logging</code>，预写式日志，机制来实现的</li>
+<li>在使用 WAL 的系统中，<strong>所有的修改都先被写入到日志中，然后再被应用到系统中</strong>。通常包含 redo 和 undo 两部分信息</li>
+<li>为什么需要使用 WAL，然后包含 redo 和 undo 信息呢？<ul>
+<li>举个例子，如果一个系统直接将变更应用到系统状态中，那么在机器掉电重启之后系统需要知道操作是成功了，还是只有部分成功或者是失败了。如果使用了 WAL，那么在重启之后系统可以通过比较日志和系统状态来决定是继续完成操作还是撤销操作</li>
+<li><code>redo log</code> 称为重做日志，每当有操作时，在数据变更之前将操作写入 redo log，这样当发生掉电之类的情况时系统可以在重启后继续操作</li>
+<li><code>undo log</code> 称为撤销日志，当一些变更执行到一半无法完成时，可以根据撤销日志恢复到变更之间的状态</li>
+</ul>
+</li>
+<li>MySQL 中用 redo log 来在系统 Crash 重启之类的情况时修复数据，而 undo log 来保证事务的原子性</li>
+</ul>
+<h2 id="事务id"><a href="#事务id" class="headerlink" title="事务id"></a>事务id</h2><ul>
+<li><p>一个事务可以是一个<strong>只读事务</strong>，或者是一个<strong>读写事务</strong></p>
+</li>
+<li><p>可以通过 <code>START TRANSACTION READ ONLY</code> 语句开启一个只读事务，在只读事务中<strong>不可以</strong>对普通的表进行增、删、改操作，但<strong>可以</strong>对用户临时表做增、删、改操作</p>
+</li>
+<li><p>可以通过 <code>START TRANSACTION READ WRITE</code> 语句开启一个读写事务，或者使用 BEGIN、START TRANSACTION 语句开启的事务默认也算是读写事务，在读写事务中<strong>可以</strong>对表执行增删改查操作</p>
+</li>
+<li><p><strong>如果某个事务执行过程中对某个表执行了增、删、改操作，那么 InnoDB 存储引擎就会给它分配一个独一无二的事务 id，针对 MySQL 5.7 分配方式如下</strong></p>
+<ul>
+<li>对于只读事务来说，只有在它<strong>第一次</strong>对某个用户创建的临时表执行增、删、改操作时才会为这个事务分配一个事务 id，否则的话是不分配事务 id 的</li>
+<li>对于读写事务来说，只有在它<strong>第一次</strong>对某个表执行增、删、改操作时才会为这个事务分配一个事务 id，否则的话也是不分配事务 id 的</li>
+<li>有的时候虽然开启了一个读写事务，但是在这个事务中<strong>全是查询语句</strong>，并没有执行增、删、改的语句，那也就意味着这个事务并不会被分配一个事务 id</li>
+</ul>
+</li>
+<li><p><strong>这个事务 id 本质上就是一个数字，它的分配策略和隐藏列 row_id 的分配策略大抵相同，具体策略如下</strong></p>
+<ul>
+<li>服务器会<strong>在内存中维护一个全局变量</strong>，每当需要为某个事务分配一个事务 id 时，就会把该变量的值当作事务 id 分配给该事务，并且把该变量自增 1</li>
+<li>每当这个变量的值为 256 的倍数时，就会将该变量的值刷新到系统表空间的页号为 5 的页面中一个称之为 Max Trx ID 的属性处，这个属性占用 8 个字节的存储空间</li>
+<li>当系统下一次重新启动时，会将上边提到的 Max Trx ID 属性加载到内存中，<strong>将该值加上 256 之后赋值给全局变量</strong>，因为在上次关机时该全局变量的值可能大于Max Trx ID 属性值</li>
+<li>这样就可以保证整个系统中分配的事务 id 值是一个递增的数字。先被分配 id 的事务得到的是较小的事务 id，后被分配 id 的事务得到的是较大的事务 id</li>
+</ul>
+</li>
+</ul>
+<h1 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h1><h2 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h2><ul>
+<li><p>全称 Multi-Version Concurrency Control，即多版本并发控制，主要是为了<strong>提高数据库的并发性能</strong></p>
+</li>
+<li><p><strong>同一行数据</strong>平时发生读写请求时，会上锁阻塞住。但 MVCC 用更好的方式去处理读写请求，做到在发生读写请求冲突时不用加锁</p>
+</li>
+<li><p>这个读是指的<strong>快照读</strong>，而不是当前读，当前读是一种加锁操作，是悲观锁</p>
+</li>
+<li><p><strong>在事务并发执行遇到的问题如下</strong></p>
+<ul>
+<li><strong>脏读</strong>：如果一个事务读到了另一个未提交事务修改过的数据，那就意味着发生了脏读</li>
+<li><strong>不可重复读</strong>：如果一个事务只能读到另一个已经提交的事务修改过的数据，并且其他事务每对该数据进行一次修改并提交后，该事务都能查询得到最新值，那就意味着发生了不可重复读</li>
+<li><strong>幻读</strong>：如果一个事务先根据某些条件查询出一些记录，之后另一个事务又向表中插入了符合这些条件的记录，原先的事务再次按照该条件查询时，能把另一个事务插入的记录也读出来，那就意味着发生了幻读，幻读强调的是一个事务按照某个相同条件多次读取记录时，后读取时读到了之前没有读到的记录，幻读只是<strong>重点强调了读取到了之前读取没有获取到的记录</strong></li>
+</ul>
+</li>
+<li><p><strong>MySQL 在 REPEATABLE READ 隔离级别下，是可以很大程度避免幻读问题的发生的</strong></p>
+</li>
+</ul>
+<h2 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h2><ul>
+<li><p><strong>读未提交（read uncommitted）</strong>，指一个事务还没提交时，它做的变更就能被其他事务看到；</p>
+</li>
+<li><p><strong>读提交（read committed）</strong>，指一个事务提交之后，它做的变更才能被其他事务看到；</p>
+</li>
+<li><p><strong>可重复读（repeatable read）</strong>，指一个事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，<strong>MySQL InnoDB 引擎的默认隔离级别</strong>；</p>
+</li>
+<li><p><strong>串行化（serializable）</strong>；会对记录加上读写锁，在多个事务对这条记录进行读写操作时，如果发生了读写冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行</p>
+</li>
+<li><p>按隔离水平高低排序如下</p>
+<p><img src="/database/mysql-02-transaction/image-20231119215208666.png" alt="image-20231119215208666"></p>
+</li>
+<li><p>针对不同的隔离级别，并发事务时可能发生的现象也会不同</p>
+<p><img src="/database/mysql-02-transaction/image-20231119215230394.png" alt="image-20231119215230394"></p>
+</li>
+</ul>
+<h2 id="版本链"><a href="#版本链" class="headerlink" title="版本链"></a>版本链</h2><ul>
+<li><p>对于使用 InnoDB 存储引擎的表来说，它的聚簇索引记录中都包含两个必要的隐藏列</p>
+</li>
+<li><p><strong>trx_id</strong>：每次一个事务对某条聚簇索引记录进行改动时，都会把该事务的事务 id 赋值给 trx_id 隐藏列</p>
+</li>
+<li><p><strong>roll_pointer</strong>：每次对某条聚簇索引记录进行改动时，都会把旧的版本写入到 undo 日志中，然后这个隐藏列就相当于一个指针，可以通过它来找到该记录修 改前的信息</p>
+</li>
+<li><p>演示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-- 创建表</span><br><span class="line">CREATE TABLE mvcc_test (</span><br><span class="line">id INT,</span><br><span class="line">name VARCHAR(100),</span><br><span class="line">domain varchar(100),</span><br><span class="line">PRIMARY KEY (id)</span><br><span class="line">) Engine=InnoDB CHARSET=utf8;</span><br><span class="line"></span><br><span class="line">-- 添加数据</span><br><span class="line">INSERT INTO mvcc_test VALUES(1, &#x27;habit&#x27;, &#x27;演示mvcc&#x27;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>假设插入该记录的事务 id&#x3D;50，那么该条记录的展示如图</p>
+<p><img src="/database/mysql-02-transaction/image-20231119213332106.png" alt="image-20231119213332106"></p>
+</li>
+<li><p>﻿﻿假设之后两个事务 id 分别为 70、90 的事务对这条记录进行 UPDATE 操作</p>
+<p><img src="/database/mysql-02-transaction/image-20231119213344807.png" alt="image-20231119213344807"></p>
+</li>
+<li><p>每次对记录进行改动，都会记录一条 <strong>undo 日志</strong>，每条 undo 日志也都有一个 roll_pointer 属性，可以将这些 undo 日志都连起来，串成一个链表</p>
+<p><img src="/database/mysql-02-transaction/image-20231119213411995.png" alt="image-20231119213411995"></p>
+</li>
+<li><p>对该记录每次更新后，都会将旧值放到一条 undo 日志中，就算是该记录的一个旧版本，随着更新次数的增多，所有的版本都会被 roll_pointer 属性连接成一个链表，把这个链表称之为版本链，版本链的头节点就是当前记录最新的值。另外，每个版本中还包含生成该版本时对应的事务 id。于是可以利用这个记录的版本链来控制并发事务访问相同记录的行为，那么这种机制就被称之为：<strong>多版本并发控制，即 MVCC</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="ReadView"><a href="#ReadView" class="headerlink" title="ReadView"></a>ReadView</h2><ul>
+<li><p>对于使用 READ UNCOMMITTED 隔离级别的事务来说，由于可以读到未提交事务修改过的记录，所以直接读取记录的最新版本就好了</p>
+</li>
+<li><p>对于使用 SERIALIZABLE 隔离级别的事务来说，InnoDB 使用加锁的方式来访问记录</p>
+</li>
+<li><p>对于使用 READ COMMITTED 和 REPEATABLE READ 隔离级别的事务来说，都必须保证读到已经提交了的事务修改过的记录，也就是说假如另一个事务已经修改了记录但是尚未提交，是不能直接读取最新版本的记录的，核心问题就是：READ COMMITTED 和 REPEATABLE READ 隔离级别在不可重复读和幻读上的区别是从哪里来的，其实结合前面的知识，这两种隔离级别关键是需要判断一下版本链中的哪个版本是当前事务可见的</p>
+</li>
+<li><p><strong>为此，InnoDB 提出了一个 ReadView 的概念，这个 ReadView 中主要包含 4 个比较重要的内容</strong></p>
+<ul>
+<li><p><strong>m_ids</strong>：表示在生成 ReadView 时当前系统中<strong>活跃的读写事务</strong>的事务id 列表</p>
+</li>
+<li><p><strong>min_trx_id</strong>：表示在生成 ReadView 时当前系统中活跃的读写事务中最小的事务 id，也就是 m_ids 中的最小值</p>
+</li>
+<li><p><strong>max_trx_id</strong>：表示在生成 ReadView 时系统中应该分配给下一个事务的 id 值，注：max_trx_id 并不是 m_ids 中的最大值，事务 id 是递增分配的。比方说现在有 id 为 1，2，3 这三个事务，之后 id 为 3 的事务提交了。那么一个新的读事务在生成 ReadView 时，m_ids 就包括 1 和 2，min_trx_id 的值就是 1，max_trx_id 的值就是 4</p>
+</li>
+<li><p><strong>creator_trx_id</strong>：表示生成该 ReadView 的事务的事务 id</p>
+<p><img src="/database/mysql-02-transaction/ReadView.drawio.png" alt="img"></p>
+</li>
+</ul>
+</li>
+<li><p>有了这个 ReadView，这样在访问某条记录时，只需要按照下边的步骤判断记录的某个版本是否可见</p>
+<ol>
+<li>如果被访问版本的 trx_id 属性值与 ReadView 中的 creator_trx_id 值相同，意味着当前事务在访问它自己修改过的记录，所以该版本可以被当前事务访问</li>
+<li>如果被访问版本的 trx_id 属性值小于 ReadView 中的 min_trx_id 值，表明生成该版本的事务在当前事务生成 ReadView 前已经提交，所以该版本可以被当前事务访问</li>
+<li>如果被访问版本的 trx_id 属性值大于或等于 ReadView 中的 max_trx_id 值，表明生成该版本的事务在当前事务生成 ReadView 后才开启，所以该版本不可以被当前事务访问</li>
+<li>如果被访问版本的 trx_id 属性值在 ReadView 的 min_trx_id 和 max_trx_id之间 min_trx_id &lt; trx_id &lt; max_trx_id，那就需要判断一下 trx_id 属性值是不是在 m_ids 列表中，如果在，说明创建 ReadView 时生成该版本的事务还是活跃的，该版本不可以被访问；如果不在，说明创建 ReadView 时生成该版本的事务已经被提交，该版本可以被访问</li>
+<li>如果某个版本的数据对当前事务不可见的话，那就<strong>顺着版本链找到下一个版本的数据</strong>，继续按照上边的步骤判断可见性，依此类推，直到版本链中的最后一个版本。如果最后一个版本也不可见的话，那么就意味着该条记录对该事务完全不可见，查询结果就不包含该记录</li>
+</ol>
+</li>
+<li><p>在 MySQL 中，READ COMMITTED 和 REPEATABLE READ 隔离级别的一个非常大的区别就是它们生成 ReadView 的时机不同</p>
+<ul>
+<li><strong>READ COMMITTED</strong>：每次读取数据前都生成一个 ReadView</li>
+<li><strong>REPEATABLE READ：</strong>在第一次读取数据时生成一个 ReadView</li>
+</ul>
+</li>
+</ul>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><ul>
+<li>还是以表 mvcc_test 为例，假设现在表 mvcc_test 中只有一条由事务 id 为 50 的事务插入的一条记录，接下来看一下 READ COMMITTED 和 REPEATABLE READ 所谓的生成 ReadView 的时机不同到底不同在哪里</li>
+</ul>
+<h3 id="READ-COMMITTED"><a href="#READ-COMMITTED" class="headerlink" title="READ COMMITTED"></a>READ COMMITTED</h3><ul>
+<li><p>每次读取数据前都生成一个 ReadView</p>
+</li>
+<li><p>比方说现在系统里有两个事务id 分别为 70、90 的事务在执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- T 70</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_70_01&#x27; WHERE id = 1;</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_70_02&#x27; WHERE id = 1;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>此时表 mvcc_test 中 id 为 1 的记录得到的版本链表如下所示</p>
+<p><img src="/database/mysql-02-transaction/image-20231119214123863.png" alt="image-20231119214123863"></p>
+</li>
+<li><p>﻿﻿假设现在有一个使用 READ COMMITTED 隔离级别的事务开始执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- 使用 READ COMMITTED 隔离级别的事务</span><br><span class="line">BEGIN;</span><br><span class="line">-- SELECE1：Transaction 70、90 未提交</span><br><span class="line">SELECT * FROM mvcc_test  WHERE id = 1; </span><br><span class="line">-- 得到的列 name 的值为&#x27;habit&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>这个 SELECE1 的执行过程如下</strong></p>
+<ul>
+<li>在执行 SELECT 语句时会先生成一个 ReadView，ReadView 的 m_ids 列表的内容就是[70, 90]，min_trx_id 为 70，max_trx_id 为 91，creator_trx_id 为 0</li>
+<li>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列 name 的内容是 habit_trx_id_70_02，该版本的 trx_id 值为 70，在 m_ids 列表内，所以不符合可见性要求第 4 条：<strong>如果被访问版本的 trx_id 属性值在 ReadView 的 min_trx_id 和 max_trx_id之间 min_trx_id &lt; trx_id &lt; max_trx_id，那就需要判断一下trx_id 属性值是不是在 m_ids 列表中，如果在，说明创建 ReadView 时生成该版本的事务还是活跃的，该版本不可以被访问；如果不在，说明创建 ReadView 时生成该版本的事务已经被提交，该版本可以被访问</strong>。根据 roll_pointer 跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit_trx_id_70_01，该版本的 trx_id 值也为 70，也在 m_ids 列表内，所以也不符合要求，继续跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit，该版本的 trx_id 值为 50，小于 ReadView 中的 min_trx_id 值，所以这个版本是符合要求的第 2 条：<strong>如果被访问版本的 trx_id 属性值小于 ReadView 中的 min_trx_id 值，表明生成该版本的事务在当前事务生成 ReadView 前已经提交，所以该版本可以被当前事务访问。</strong>最后返回的版本就是这条列 name 为 habit 的记录</li>
+</ul>
+</li>
+<li><p>之后，把事务 id 为 70 的事务提交一下，然后再到事务 id 为 90 的事务中更新一下表 mvcc_test 中 id 为 1 的记录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- T 90</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_90_01&#x27; WHERE id = 1;</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_90_02&#x27; WHERE id = 1;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>此时表 mvcc 中 id 为 1 的记录的版本链就长这样</p>
+<p><img src="/database/mysql-02-transaction/image-20231119214250488.png" alt="image-20231119214250488"></p>
+</li>
+<li><p>然后再到刚才使用 READ COMMITTED 隔离级别的事务中继续查找这个 id 为 1 的记录，如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 使用 READ COMMITTED 隔离级别的事务</span><br><span class="line">BEGIN;</span><br><span class="line">-- SELECE1：Transaction 70、90 均未提交</span><br><span class="line">SELECT * FROM mvcc_test WHERE id = 1; -- 得到的列 name 的值为&#x27;habit&#x27;</span><br><span class="line">-- SELECE2：Transaction 70 提交，Transaction 90 未提交</span><br><span class="line">SELECT * FROM mvcc_test WHERE id = 1; -- 得到的列 name 的值为&#x27;habit_trx_id_70_02&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>这个SELECE2 的执行过程如下</strong></p>
+<ul>
+<li>在执行 SELECT 语句时又会单独生成一个 ReadView，该 ReadView 的 m_ids 列表的内容就是[90]，min_trx_id 为90，max_trx_id 为 91，creator_trx_id 为 0</li>
+<li>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列 name 的内容是 habit_trx_id_90_02，该版本的 trx_id 值为 90，在 m_ids 列表内，所以不符合可见性要求，根据 roll_pointer 跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit_trx_id_90_01，该版本的 trx_id 值为 90，也在 m_ids 列表内，所以也不符合要求，继续跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit_trx_id_70_02，该版本的 trx_id 值为 70，小于 ReadView 中的 min_trx_id 值 90，所以这个版本是符合要求的，最后返回这个版本中列 name 为 habit_trx_id_70_02 的记录</li>
+<li>以此类推，如果之后事务 id 为 90 的记录也提交了，再次在使用 READ COMMITTED 隔离级别的事务中查询表 mvcc_test 中 id 值为 1 的记录时，得到的结果就是 habit_trx_id_90_02 了</li>
+</ul>
+</li>
+<li><p><strong>总结：</strong>使用 READ COMMITTED 隔离级别的事务在每次查询开始时都会生成一个独立的 ReadView</p>
+</li>
+</ul>
+<h3 id="REPEATABLE-READ"><a href="#REPEATABLE-READ" class="headerlink" title="REPEATABLE READ"></a>REPEATABLE READ</h3><ul>
+<li><p>在第一次读取数据时生成一个 ReadView</p>
+</li>
+<li><p>对于使用 REPEATABLE READ 隔离级别的事务来说，只会在第一次执行查询语句时生成一个 ReadView，之后的查询就不会重复生成了</p>
+</li>
+<li><p>比方说现在系统里有两个事务id 分别为 70、90 的事务在执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- T 70</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_70_01&#x27; WHERE id = 1;</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_70_02&#x27; WHERE id = 1;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>此时表 mvcc_test 中 id 为 1 的记录得到的版本链表如下所示</p>
+<p><img src="/database/mysql-02-transaction/image-20231119214533045.png" alt="image-20231119214533045"></p>
+</li>
+<li><p>﻿﻿假设现在有一个使用 REPEATABLE READ 隔离级别的事务开始执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- 使用 REPEATABLE READ 隔离级别的事务</span><br><span class="line">BEGIN;</span><br><span class="line">-- SELECE1：Transaction 70、90 未提交</span><br><span class="line">SELECT * FROM mvcc_test WHERE id = 1; -- 得到的列name 的值为&#x27;habit&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>这个 SELECE1 的执行过程如下</strong></p>
+<ul>
+<li>在执行 SELECT 语句时会先生成一个 ReadView，ReadView 的 m_ids 列表的内容就是[70, 90]，min_trx_id 为 70，max_trx_id 为 91，creator_trx_id 为 0</li>
+<li>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列 name 的内容是 habit_trx_id_70_02，该版本的 trx_id 值为 70，在 m_ids 列表内，所以不符合可见性要求，根据 roll_pointer 跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit_trx_id_70_01，该版本的 trx_id 值也为 70，也在 m_ids 列表内，所以也不符合要求，继续跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit，该版本的 trx_id 值为 50，小于 ReadView 中的 min_trx_id 值，所以这个版本是符合要求的，最后返回的就是这条列name 为 habit 的记录</li>
+</ul>
+</li>
+<li><p>之后，把事务 id 为 70 的事务提交一下，然后再到事务 id 为 90 的事务中更新一下表 mvcc_test 中 id 为 1 的记录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- 使用 REPEATABLE READ 隔离级别的事务</span><br><span class="line">BEGIN;</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_90_01&#x27; WHERE id = 1;</span><br><span class="line">UPDATE mvcc_test  SET name = &#x27;habit_trx_id_90_02&#x27; WHERE id = 1;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>此刻，表 mvcc_test 中 id 为 1 的记录的版本链就长这样</p>
+<p><img src="/database/mysql-02-transaction/image-20231119214653258.png" alt="image-20231119214653258"></p>
+</li>
+<li><p>然后再到刚才使用 REPEATABLE READ 隔离级别的事务中继续查找这个 id 为 1 的记录，如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 使用 REPEATABLE READ 隔离级别的事务</span><br><span class="line">BEGIN;</span><br><span class="line">-- SELECE1：Transaction 70、90 均未提交</span><br><span class="line">SELECT * FROM mvcc_test WHERE id = 1; -- 得到的列 name 的值为&#x27;habit&#x27;</span><br><span class="line">-- SELECE2：Transaction 70 提交，Transaction 90 未提交</span><br><span class="line">SELECT * FROM mvcc_test WHERE id = 1;  -- 得到的列 name 的值为&#x27;habit&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>这个 SELECE2 的执行过程如下</strong></p>
+<ul>
+<li>因为当前事务的隔离级别为 REPEATABLE READ，而之前在执行 SELECE1 时已经生成过 ReadView 了，所以此时直接复用之前的 ReadView，之前的 ReadView的 m_ids 列表的内容就是[70, 90]，min_trx_id 为 70，max_trx_id 为 91， creator_trx_id 为 0</li>
+<li>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列 name 的内容是 habit_trx_id_90_02，该版本的 trx_id 值为 90，在 m_ids 列表内，所以不符合可见性要求，根据 roll_pointer 跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit_trx_id_90_01，该版本的 trx_id 值为 90，也在 m_ids 列表内，所以也不符合要求，继续跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit_trx_id_70_02，该版本的 trx_id 值为 70，而 m_ids 列表中是包含值为 70 的事务 id 的，所以该版本也不符合要求，同理下一个列 name 的内容是 habit_trx_id_70_01 的版本也不符合要求。继续跳到下一个版本</li>
+<li>下一个版本的列 name 的内容是 habit，该版本的 trx_id 值为 50，小于 ReadView 中的 min_trx_id 值 70，所以这个版本是符合要求的，最后返回给用户的版本就是这条列 name 为 habit 的记录</li>
+<li>也就是说两次 SELECT 查询得到的结果是重复的，记录的列 name 值都是 habit，这就是可重复读的含义。如果之后再把事务 id 为 90 的记录提交了，然后再到刚才使用 REPEATABLE READ 隔离级别的事务中继续查找这个 id 为 1 的记录，得到的结果还是 habit</li>
+</ul>
+</li>
+</ul>
+<h2 id="MVCC-下的幻读解决和幻读现象"><a href="#MVCC-下的幻读解决和幻读现象" class="headerlink" title="MVCC 下的幻读解决和幻读现象"></a>MVCC 下的幻读解决和幻读现象</h2><ul>
+<li><p>REPEATABLE READ 隔离级别下 MVCC 可以解决不可重复读问题，那么幻读呢？MVCC 是怎么解决的？幻读是一个事务按照某个相同条件多次读取记录时，后读取时读到了之前没有读到的记录，而这个记录来自另一个事务添加的新记录</p>
+</li>
+<li><p>可以想想，在 REPEATABLE READ 隔离级别下的事务 T1 先根据某个搜索条件读取到多条记录，然后事务 T2 插入一条符合相应搜索条件的记录并提交，然后事务 T1 再根据相同搜索条件执行查询。结果会是什么？按照 ReadView 中的比较规则中的第 3 条和第 4 条不管事务 T2 比事务 T1 是否先开启，事务 T1 都是看不到 T2 的提交的</p>
+</li>
+<li><p>但是，在 REPEATABLE READ 隔离级别下 InnoDB 中的 MVCC 可以很大程度地避免幻读现象，而不是完全禁止幻读。怎么回事呢？来看下面的情况</p>
+<p><img src="/database/mysql-02-transaction/image-20231119215659030.png" alt="image-20231119215659030"></p>
+</li>
+<li><p>﻿﻿首先在事务 T1 中执行：<code>select * from mvcc_test where id = 30</code>; 这个时候是找不到 id &#x3D; 30 的记录的</p>
+</li>
+<li><p>在事务 T2 中，执行插入语句：<code>insert into mvcc_test values(30,&#39;luxi&#39;,&#39;luxi&#39;);</code></p>
+</li>
+<li><p>此时回到事务 T1，执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">update mvcc_test set domain=&#x27;luxi_t1&#x27; where id=30;</span><br><span class="line">select * from mvcc_test where id = 30;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>事务T1 很明显出现了幻读现象</p>
+</li>
+<li><p>在 REPEATABLE READ 隔离级别下，T1 第一次执行普通的 SELECT 语句时生成了一个 ReadView，之后 T2 向 mvcc_test 表中新插入一条记录并提交</p>
+</li>
+<li><p>ReadView 并不能阻止 T1 执行 UPDATE 或者 DELETE 语句来改动这个新插入的记录，由于 T2 已经提交，因此改动该记录并不会造成阻塞，但是这样一来，这条新记录的 trx_id 隐藏列的值就变成了 T1 的事务 id。之后 T1 再使用普通的 SELECT 语句去查询这条记录时就可以看到这条记录了，也就可以把这条记录返回给客户端。因为这个特殊现象的存在，可以认为 MVCC 并不能完全禁止幻读</p>
+</li>
+</ul>
+<h2 id="mvcc-总结"><a href="#mvcc-总结" class="headerlink" title="mvcc 总结"></a>mvcc 总结</h2><ul>
+<li>从上边的描述中可以看出来，所谓的 MVCC（Multi-Version Concurrency Control ，多版本并发控制）指的就是在使用 READ COMMITTD、REPEATABLE READ 这两种隔离级别的事务在执行普通的 SELECT 操作时访问记录的版本链的过程，这样子可以使不同事务的读写、写读操作并发执行，从而提升系统性能</li>
+<li>READ COMMITTD、REPEATABLE READ 这两个隔离级别的一个很大不同就是：生成 ReadView 的时机不同，READ COMMITTD 在每一次进行普通 SELECT 操作前都会生成一个 ReadView，而 REPEATABLE READ 只在第一次进行普通 SELECT 操作前生成一个 ReadView，之后的查询操作都重复使用这个 ReadView 就好了，从而基本上可以避免幻读现象</li>
+</ul>
+<h1 id="InnoDB-的-Buffer-Pool"><a href="#InnoDB-的-Buffer-Pool" class="headerlink" title="InnoDB 的 Buffer Pool"></a>InnoDB 的 Buffer Pool</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ul>
+<li>对于使用 InnoDB 作为存储引擎的表来说，不管是用于存储用户数据的索引，包括：聚簇索引和二级索引，还是各种系统数据，都是<strong>以页的形式存放在表空间中的</strong>，而所谓的表空间只不过是 InnoDB 对文件系统上一个或几个实际文件的抽象，也就是说数据还是存储在磁盘上的</li>
+<li>但是磁盘的速度慢，所以 InnoDB 存储引擎在处理客户端的请求时，当需要访问某个页的数据时，就会把完整的页的数据全部加载到内存中，即使只需要访问一个页的一条记录，那也需要先把整个页的数据加载到内存中。将整个页加载到内存中后就可以进行读写访问了，在进行完读写访问之后并不着急把该页对应的内存空间释放掉，而是将其缓存起来，这样将来有请求再次访问该页面时，就可以省去磁盘 IO 的开销了</li>
+</ul>
+<h2 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h2><ul>
+<li><p>InnoDB 为了缓存磁盘中的页，在 MySQL 服务器<strong>启动的时候就向操作系统申请了一片连续的内存</strong>，这块连续内存叫做：Buffer Pool，中文名：缓冲池</p>
+</li>
+<li><p>默认情况下 Buffer Pool 只有 128M 大小，查看该值：<code>show variables like &#39;innodb_buffer_pool_size&#39;;</code></p>
+</li>
+<li><p>可以在启动服务器的时候配置 innodb_buffer_pool_size 参数的值，它表示 Buffer Pool 的大小，配置如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[server]</span><br><span class="line">innodb_buffer_pool_size = 268435456</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其中，268435456 的单位是字节，也就是指定 Buffer Pool 的大小为 256M，Buffer Pool 也不能太小，最小值为 5M，当小于该值时会自动设置成 5M</li>
+</ul>
+</li>
+<li><p>启动 MySQL 服务器的时候，需要完成对 Buffer Pool 的初始化过程，就是先向操作系统申请 Buffer Pool 的内存空间，然后把它划分成若干对控制块和缓存页。但是此时并没有真实的磁盘页被缓存到 Buffer Pool 中，之后随着程序的运行，会不断的有磁盘上的页被缓存到 Buffer Pool 中</p>
+</li>
+<li><p>在 Buffer Pool 中会创建多个缓存页，默认的缓存页大小和在磁盘上默认的页大小是一样的，都是 16KB</p>
+</li>
+<li><p>那么怎么知道该页在不在 Buffer Pool 中呢？</p>
+<ul>
+<li>在查找数据的时候，先通过哈希表中查找 key 是否在哈希表中，如果在证明 Buffer Pool 中存在该缓存也信息，如果不存在证明不存该缓存也信息，则通过读取磁盘加载该页信息放到 Buffer Pool 中，哈希表中的 key 是通过表空间号+ 页号作组成的，value 是 Buffer Pool 的缓存页</li>
+</ul>
+</li>
+</ul>
+<h2 id="flush-链表的管理"><a href="#flush-链表的管理" class="headerlink" title="flush 链表的管理"></a>flush 链表的管理</h2><ul>
+<li>如果修改了 Buffer Pool 中某个缓存页的数据，那它就和磁盘上的页不一致了，这样的缓存页也被称为：脏页<ul>
+<li>最简单的做法就是每发生一次修改就立即同步到磁盘上对应的页上，但是频繁的往磁盘中写数据会严重的影响程序的性能</li>
+<li>所以每次修改缓存页后，并不着急把修改同步到磁盘上，而是在未来的某个时间进行同步</li>
+<li>但是如果不立即同步到磁盘的话，那之后再同步的时候怎么知道 Buffer Pool 中哪些页是脏页，哪些页从来没被修改过呢？总不能把所有的缓存页都同步到磁盘上吧，如果 Buffer Pool 被设置的很大，那一次性同步会非常慢</li>
+</ul>
+</li>
+<li>所以，需要再创建一个存储脏页的链表，凡是修改过的缓存页对应的控制块都会作为一个节点加入到一个链表中，因为这个链表节点对应的缓存页都是需要被刷新到磁盘上的，所以也叫 flush 链表</li>
+</ul>
+<h2 id="刷新脏页到磁盘"><a href="#刷新脏页到磁盘" class="headerlink" title="刷新脏页到磁盘"></a>刷新脏页到磁盘</h2><ul>
+<li>后台有专门的线程每隔一段时间负责把脏页刷新到磁盘，这样可以不影响用户线程处理正常的请求</li>
+<li>从 flush 链表中刷新一部分页面到磁盘，后台线程也会定时从 flush 链表中刷新一部分页面到磁盘，刷新的速率取决于当时系统是不是很繁忙。这种刷新页面的方式被称之为：BUF_FLUSH_LIST</li>
+</ul>
+<h1 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h1><h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><ul>
+<li>InnoDB 存储引擎是以页为单位来管理存储空间的，增删改查操作其实本质上都是在访问页面，包括：读页面、写页面、创建新页面等操作。在真正访问页面之前，需要把在磁盘上的页缓存到内存中的 Buffer Pool 之后才可以访问。但是在事务的时候又强调过一个称之为持久性的特性，就是说对于一个已经提交的事务，在事务提交后即使系统发生了崩溃，这个事务对数据库中所做的更改也不能丢失</li>
+<li>如果只在内存的 Buffer Pool 中修改了页面，假设在事务提交后突然发生了某个故障，导致内存中的数据都失效了，那么这个已经提交了的事务对数据库中所做的更改也就跟着丢失了，这是所不能忍受的。那么如何保证这个持久性呢？一个很简单的做法就是在事务提交完成之前把该事务所修改的所有页面都刷新到磁盘，但是这个简单粗暴的做法有些问题<ul>
+<li>刷新一个完整的数据页太浪费了；有时候仅仅修改了某个页面中的一个字节，但是在 InnoDB 中是以页为单位来进行磁盘 IO 的，也就是说在该事务提交时不得不将一个完整的页面从内存中刷新到磁盘，一个页面默认是16KB 大小，只修改一个字节就要刷新 16KB 的数据到磁盘上显然是太浪费了</li>
+<li>随机 IO 刷起来比较慢；一个事务可能包含很多语句，即使是一条语句也可能修改许多页面，该事务修改的这些页面可能并不相邻，这就意味着在将某个事务修改的 Buffer Pool 中的页面刷新到磁盘时，需要进行很多的随机 IO，随机 IO 比顺序 IO 要慢，尤其对于传统的机械硬盘来说</li>
+</ul>
+</li>
+<li>只是想让已经提交了的事务对数据库中数据所做的修改永久生效，即使后来系统崩溃，在重启后也能把这种修改恢复出来。其实没有必要在每次事务提交时就把该事务在内存中修改过的全部页面刷新到磁盘，只需要把修改了哪些东西记录一下就好，比方说：某个事务将系统表空间中的第 5 号页面中偏移量为 5000 处的那个字节的值 0 改成 5 只需要记录一下：<strong>将第 5 号表空间的 5 号页面的偏移量为 5000 处的值更新为：5</strong></li>
+<li>这样在事务提交时，把上述内容刷新到磁盘中，即使之后系统崩溃了，重启之后只要按照上述内容所记录的步骤重新更新一下数据页，那么该事务对数据库中所做的修改又可以被恢复出来，也就意味着满足持久性的要求。因为在系统崩溃重启时需要按照上述内容所记录的步骤重新更新数据页，所以上述内容也被称之为：<strong>重做日志，即：redo log</strong>。与在事务提交时将所有修改过的内存中的页面刷新到磁盘中相比，只将该事务执行过程中产生的 redo log 刷新到磁盘的好处如下<ul>
+<li>redo log 占用的空间非常小存储表空间 ID、页号、偏移量以及需要更新的值所需的存储空间是很小的</li>
+<li>redo log 是顺序写入磁盘的在执行事务的过程中，每执行一条语句，就可能产生若干条 redo log，这些日志是按照产生的顺序写入磁盘的，也就是使用顺序 IO</li>
+</ul>
+</li>
+</ul>
+<h2 id="写入过程"><a href="#写入过程" class="headerlink" title="写入过程"></a>写入过程</h2><ul>
+<li>InnoDB 为了更好的进行系统崩溃恢复，把一次原子操作生成的 redo log 都放在了大小为 512 字节的块（block）中</li>
+<li>为了解决磁盘速度过慢的问题而引入了 Buffer Pool。同理，写入 redo log 时也不能直接写到磁盘上，实际上在服务器启动时就向操作系统申请了一大片称之为 redo log buffer 的连续内存空间，即：redo log 缓冲区，也可以简称：log buffer。这片内存空间被划分成若干个连续的 redo log block，可以通过启动参数innodb_log_buffer_size 来指定 log buffer 的大小，该启动参数的默认值为：16MB</li>
+<li>向 log buffer 中写入 redo log 的过程是顺序的，也就是先往前边的 block 中写，当该 block 的空闲空间用完之后再往下一个 block 中写</li>
+</ul>
+<h2 id="刷盘时机"><a href="#刷盘时机" class="headerlink" title="刷盘时机"></a>刷盘时机</h2><ul>
+<li>log buffer 空间不足时，如果不停地往这个有限大小的 log buffer 里塞入日志，很快它就会被填满。InnoDB 认为如果当前写入 log buffer 的 redo log 量已 经占满了 log buffer 总容量的大约一半左右，就需要把这些日志刷新到磁盘上</li>
+<li>事务提交时，必须要把修改这些页面对应的 redo log 刷新到磁盘</li>
+<li>后台有一个线程，大约<strong>每秒</strong>都会刷新一次 log buffer 中的 redo log 到磁盘</li>
+<li>正常关闭服务器时等等</li>
+</ul>
+<h1 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h1><h2 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h2><ul>
+<li><p>事务需要保证原子性，也就是事务中的操作要么全部完成，要么什么也不做。但是偏偏有时候事务执行到一半会出现一些情况，比如</p>
+<ul>
+<li>情况一：事务执行过程中可能遇到各种错误，比如服务器本身的错误，操作系统错误，甚至是突然断电导致的错误</li>
+<li>情况二：程序员可以在事务执行过程中手动输入 ROLLBACK 语句结束当前的事务的执行</li>
+</ul>
+</li>
+<li><p>这两种情况都会导致事务执行到一半就结束，但是事务执行过程中可能已经修改了很多东西，为了保证事务的原子性，需要把东西改回原先的样子，这个过程就称之为回滚，即：rollback，这样就可以造成这个事务看起来什么都没做，所以符合原子性要求</p>
+</li>
+<li><p>每当要对一条记录做改动时，都需要把回滚时所需的东西都给记下来，比如</p>
+<ul>
+<li>插入一条记录时，至少要把这条记录的主键值记下来，之后回滚的时候只需要把这个主键值对应的记录删掉</li>
+<li>删除了一条记录，至少要把这条记录中的内容都记下来，这样之后回滚时再把由这些内容组成的记录插入到表中</li>
+<li>修改了一条记录，至少要把修改这条记录前的旧值都记录下来，这样之后回滚时再把这条记录更新为旧值</li>
+</ul>
+</li>
+<li><p>这些为了回滚而记录的这些东西称之为撤销日志，即：undo log。这里需要注意的一点是，由于查询操作并不会修改任何用户记录，所以在查询操作执行时，并不需要记录相应的 undo log</p>
+</li>
+</ul>
+<h2 id="undo-日志的格式"><a href="#undo-日志的格式" class="headerlink" title="undo 日志的格式"></a>undo 日志的格式</h2><ul>
+<li>为了实现事务的原子性，InnoDB 存储引擎在实际进行增、删、改一条记录时，都需要先把对应的 undo 日志记下来。一般每对一条记录做一次改动，就对应着一条 undo 日志，但在某些更新记录的操作中，也可能会对应着 2 条 undo 日志</li>
+<li>一个事务在执行过程中可能新增、删除、更新若干条记录，也就是说需要记录很多条对应的 undo 日志，这些 undo 日志会被从 0 开始编号，也就是说根据生成的顺序分别被称为第 0 号 undo 日志、第 1 号 undo 日志、…、第 n 号 undo 日志等，这个编号也被称之为 undo no</li>
+<li>这些 undo 日志是被记录到类型为 FIL_PAGE_UNDO_LOG 的页面中。这些页面可以从系统表空间中分配，也可以从一种专门存放 undo 日志的表空间，也就是所谓的 undo tablespace 中分配</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0UChNwqamxN7Bq13z7CAdQ">MYSQL 事务的底层原理</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/cxin1225/article/details/131293765">mysql数据库之事务</a></li>
+<li><a target="_blank" rel="noopener" href="https://xiaolincoding.com/mysql/transaction/mvcc.html#%E4%BA%8B%E5%8A%A1%E6%9C%89%E5%93%AA%E4%BA%9B%E7%89%B9%E6%80%A7">事务隔离级别是怎么实现的？</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">cv-programmer</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://bh.ecel.top/database/mysql-02-transaction/">http://bh.ecel.top/database/mysql-02-transaction/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://bh.ecel.top" target="_blank">cv-programmer</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/%E4%BA%8B%E5%8A%A1/">事务</a><a class="post-meta__tags" href="/tags/MVCC/">MVCC</a><a class="post-meta__tags" href="/tags/redo-log/">redo log</a><a class="post-meta__tags" href="/tags/undo-log/">undo log</a></div><div class="post_share"><div class="social-share" data-image="/image/mysql.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/other/The-command-is-all-you-need/"><img class="prev-cover" src="/image/awesome.jpg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">命令行哲学</div></div></a></div><div class="next-post pull-right"><a href="/tools/The-trick-of-docker-compose/"><img class="next-cover" src="/image/docker.jpg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">docker-compose使用说明</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/database/mysql-01-basic-command/" title="【MySQL】01-基础命令"><img class="cover" src="/image/mysql.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-25</div><div class="title">【MySQL】01-基础命令</div></div></a></div><div><a href="/tutorial/Linux-bt-thinkphp/" title="【Linux】宝塔 + thinkphp"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-01</div><div class="title">【Linux】宝塔 + thinkphp</div></div></a></div><div><a href="/tutorial/Linux-install-MySQL-in-Linux/" title="【Linux】MySQL安装"><img class="cover" src="/image/linux.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-23</div><div class="title">【Linux】MySQL安装</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/image/friend_404.gif'" alt="avatar"/><div class="author-info__name">cv-programmer</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">81</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">108</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cv-programmer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/cv-programmer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:usetologin@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1"><span class="toc-number">1.</span> <span class="toc-text">事务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9ACID"><span class="toc-number">1.2.</span> <span class="toc-text">特点ACID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">底层原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1id"><span class="toc-number">1.4.</span> <span class="toc-text">事务id</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MVCC"><span class="toc-number">2.</span> <span class="toc-text">MVCC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5-1"><span class="toc-number">2.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-number">2.2.</span> <span class="toc-text">隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E9%93%BE"><span class="toc-number">2.3.</span> <span class="toc-text">版本链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReadView"><span class="toc-number">2.4.</span> <span class="toc-text">ReadView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.5.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#READ-COMMITTED"><span class="toc-number">2.5.1.</span> <span class="toc-text">READ COMMITTED</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#REPEATABLE-READ"><span class="toc-number">2.5.2.</span> <span class="toc-text">REPEATABLE READ</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVCC-%E4%B8%8B%E7%9A%84%E5%B9%BB%E8%AF%BB%E8%A7%A3%E5%86%B3%E5%92%8C%E5%B9%BB%E8%AF%BB%E7%8E%B0%E8%B1%A1"><span class="toc-number">2.6.</span> <span class="toc-text">MVCC 下的幻读解决和幻读现象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mvcc-%E6%80%BB%E7%BB%93"><span class="toc-number">2.7.</span> <span class="toc-text">mvcc 总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#InnoDB-%E7%9A%84-Buffer-Pool"><span class="toc-number">3.</span> <span class="toc-text">InnoDB 的 Buffer Pool</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">3.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Buffer-Pool"><span class="toc-number">3.2.</span> <span class="toc-text">Buffer Pool</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flush-%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AE%A1%E7%90%86"><span class="toc-number">3.3.</span> <span class="toc-text">flush 链表的管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E6%96%B0%E8%84%8F%E9%A1%B5%E5%88%B0%E7%A3%81%E7%9B%98"><span class="toc-number">3.4.</span> <span class="toc-text">刷新脏页到磁盘</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#redo-log"><span class="toc-number">4.</span> <span class="toc-text">redo log</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">写入过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E7%9B%98%E6%97%B6%E6%9C%BA"><span class="toc-number">4.3.</span> <span class="toc-text">刷盘时机</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undo-log"><span class="toc-number">5.</span> <span class="toc-text">undo log</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8-1"><span class="toc-number">5.1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undo-%E6%97%A5%E5%BF%97%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">undo 日志的格式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理"><img src="/image/docker.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Docker】01-构建时 secret 处理"/></a><div class="content"><a class="title" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理">【Docker】01-构建时 secret 处理</a><time datetime="2024-08-17T07:37:36.000Z" title="发表于 2024-08-17 15:37:36">2024-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/tools/The-trick-of-kind/" title="kind 使用说明"><img src="/image/kind.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="kind 使用说明"/></a><div class="content"><a class="title" href="/tools/The-trick-of-kind/" title="kind 使用说明">kind 使用说明</a><time datetime="2024-07-28T08:41:40.000Z" title="发表于 2024-07-28 16:41:40">2024-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【TroubleShooting】Vmware 相关"/></a><div class="content"><a class="title" href="/troubleshoot/vmware/" title="【TroubleShooting】Vmware 相关">【TroubleShooting】Vmware 相关</a><time datetime="2024-07-21T06:00:00.000Z" title="发表于 2024-07-21 14:00:00">2024-07-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门"><img src="/image/k8s.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【k8s】02-快速入门"/></a><div class="content"><a class="title" href="/cloud/k8s-02-quickly-start/" title="【k8s】02-快速入门">【k8s】02-快速入门</a><time datetime="2024-06-23T05:04:27.000Z" title="发表于 2024-06-23 13:04:27">2024-06-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine"><img src="/image/go.jpeg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Go】05-goroutine"/></a><div class="content"><a class="title" href="/codeLang/Go-05-goroutine/" title="【Go】05-goroutine">【Go】05-goroutine</a><time datetime="2024-05-03T02:51:56.000Z" title="发表于 2024-05-03 10:51:56">2024-05-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/image/mysql.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By cv-programmer</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
