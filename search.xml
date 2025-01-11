@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>区块链简易 demo</title>
+      <link href="/web3/what-is-blockchain/"/>
+      <url>/web3/what-is-blockchain/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Preface"><a href="#Preface" class="headerlink" title="Preface"></a>Preface</h1><p>本文是 Anders Brownworth 在 2016 的一个科普视频 <a href="https://www.youtube.com/watch?v=_160oMzblY8">Blockchain 101 - A Visual Demo</a> (youtube)，视频中通过一个 demo 由浅入深介绍了 blockchain 的简易原理，推荐观看原视频，本文是视频的文字简述版，方便查阅与思考。文章附带了 demo 源码，可自行构建镜像本地启动，可设置国内源加快速度</p><ul><li>设置: <code>npm config set registry https://registry.npmmirror.com</code></li><li>查看: <code>npm config get registry</code></li></ul><h1 id="blockchain"><a href="#blockchain" class="headerlink" title="blockchain"></a>blockchain</h1><p>作者从 hash 开始，逐步引入到 Coinbase </p><h2 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h2><p>给定一些值，然后基于对应的 hash 算法，即可得到一串数字，称为 hash 值，如下图中输入 <code>hello</code>，生成了一串 hash 值</p><p><img src="/web3/what-is-blockchain/image-20241214212940089.png" alt="image-20241214212940089"></p><h2 id="block"><a href="#block" class="headerlink" title="block"></a>block</h2><p>block 则是在 hash 的基础上，加入了更多的传入值，<strong>共同决定生成的 hash 值</strong>，如果修改了其中任意一个的内容，那么 hash 值就会发生变化</p><p><img src="/web3/what-is-blockchain/image-20241214213041716.png" alt="image-20241214213041716"></p><p>如果期望最终的 hash 值，保持与未修改前的一致，那么其他内容也需要相应变化，比如下图将 <code>Data</code> 由空修改为了 <code>hello</code>，点击 <code>Mine</code> 后，<code>Nonce</code> 值发生了变化（72608 -&gt; 85869）</p><p><img src="/web3/what-is-blockchain/image-20241214213337758.png" alt="image-20241214213337758"></p><h2 id="blockchain-1"><a href="#blockchain-1" class="headerlink" title="blockchain"></a>blockchain</h2><p>blockchain 则是引入了更多的 block，不同 block 间通过 hash 值串接，可以看到，修改其中任意一个的内容时，修改点后续的内容都将发生变化</p><p><img src="/web3/what-is-blockchain/image-20241214213529466.png" alt="image-20241214213529466"></p><p>当然，如果想确保修改内容后，hash 值保持不变，只需要和修改单个 block 一样，重新计算即可，只不过这次需要计算的不再是单个 block，而是修改点后的所有 block</p><h2 id="distributed"><a href="#distributed" class="headerlink" title="distributed"></a>distributed</h2><p>为了解决 blockchain 可以被篡改的问题，引入了分布式的 blockchain，即多条 blockchain，即使修改了一条 blockchain，也无法修改所有的 blockchain</p><p><img src="/web3/what-is-blockchain/image-20241214214119176.png" alt="image-20241214214119176"></p><h2 id="Tokens"><a href="#Tokens" class="headerlink" title="Tokens"></a>Tokens</h2><p>Tokens 在 demo 中是引入了交易的 distributed，如下多了 <code>Tx</code> 块</p><p><img src="/web3/what-is-blockchain/image-20241214214213204.png" alt="image-20241214214213204"></p><h2 id="Coinbase"><a href="#Coinbase" class="headerlink" title="Coinbase"></a>Coinbase</h2><p>Coinbase 则是在 Tokens 的基础上，引入了 <strong>Coinbase</strong> 的概念，即交易的资金原始来源（即币库），demo 中的 Coinbase 没有实际的用处，看着是为了规定 hash 值随便写的</p><p><img src="/web3/what-is-blockchain/image-20241214214443329.png" alt="image-20241214214443329"></p><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol><li><a href="https://www.youtube.com/watch?v=_160oMzblY8">YouTube: Blockchain入门 - 可视化演示</a>, <a href="https://github.com/anders94/blockchain-demo">anders94&#x2F;blockchain-demo</a></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> web3 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> web3 </tag>
+            
+            <tag> 区块链 </tag>
+            
+            <tag> blockchain </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CF worker 使用</title>
       <link href="/tutorial/cf-worker/"/>
       <url>/tutorial/cf-worker/</url>
@@ -1177,11 +1206,11 @@
       
         <tags>
             
+            <tag> Linux </tag>
+            
             <tag> NAT </tag>
             
             <tag> 内网穿透 </tag>
-            
-            <tag> Linux </tag>
             
         </tags>
       
@@ -1854,9 +1883,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
             <tag> 面试题 </tag>
             
@@ -1918,9 +1947,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
         </tags>
       
@@ -2115,9 +2144,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 树 </tag>
+            
+            <tag> 数组 </tag>
             
             <tag> Binary Indexed Tree </tag>
             

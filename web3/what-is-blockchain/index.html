@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>区块链简易 demo | cv-programmer</title><meta name="keywords" content="web3,区块链,blockchain"><meta name="author" content="cv-programmer"><meta name="copyright" content="cv-programmer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Preface本文是 Anders Brownworth 在 2016 的一个科普视频 Blockchain 101 - A Visual Demo (youtube)，视频中通过一个 demo 由浅入深介绍了 blockchain 的简易原理，推荐观看原视频，本文是视频的文字简述版，方便查阅与思考。文章附带了 demo 源码，可自行构建镜像本地启动，可设置国内源加快速度  设置: npm con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="区块链简易 demo">
+<meta property="og:url" content="http://bh.ecel.top/web3/what-is-blockchain/index.html">
+<meta property="og:site_name" content="cv-programmer">
+<meta property="og:description" content="Preface本文是 Anders Brownworth 在 2016 的一个科普视频 Blockchain 101 - A Visual Demo (youtube)，视频中通过一个 demo 由浅入深介绍了 blockchain 的简易原理，推荐观看原视频，本文是视频的文字简述版，方便查阅与思考。文章附带了 demo 源码，可自行构建镜像本地启动，可设置国内源加快速度  设置: npm con">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://bh.ecel.top/image/blockchain.jpg">
+<meta property="article:published_time" content="2024-12-14T12:39:20.000Z">
+<meta property="article:modified_time" content="2025-01-11T10:46:36.813Z">
+<meta property="article:author" content="cv-programmer">
+<meta property="article:tag" content="web3">
+<meta property="article:tag" content="区块链">
+<meta property="article:tag" content="blockchain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://bh.ecel.top/image/blockchain.jpg"><link rel="shortcut icon" href="/image/avatar.jpg"><link rel="canonical" href="http://bh.ecel.top/web3/what-is-blockchain/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":10,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-01-11 18:46:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/image/avatar.jpg" onerror="onerror=null;src='/image/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">115</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/image/blockchain.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">cv-programmer</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-lock"></i><span> 个人</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/timerest/"><i class="fa-fw fas fa-warning"></i><span> 倒计时</span></a></li><li><a class="site-page" href="/myweb/"><i class="fa-fw fas fa-database"></i><span> 网站</span></a></li><li><a class="site-page" href="/blogs/"><i class="fa-fw fas fa-file-text"></i><span> 博文</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">区块链简易 demo</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-14T12:39:20.000Z" title="发表于 2024-12-14 20:39:20">2024-12-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-11T10:46:36.813Z" title="更新于 2025-01-11 18:46:36">2025-01-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web3/">web3</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Preface"><a href="#Preface" class="headerlink" title="Preface"></a>Preface</h1><p>本文是 Anders Brownworth 在 2016 的一个科普视频 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=_160oMzblY8">Blockchain 101 - A Visual Demo</a> (youtube)，视频中通过一个 demo 由浅入深介绍了 blockchain 的简易原理，推荐观看原视频，本文是视频的文字简述版，方便查阅与思考。文章附带了 demo 源码，可自行构建镜像本地启动，可设置国内源加快速度</p>
+<ul>
+<li>设置: <code>npm config set registry https://registry.npmmirror.com</code></li>
+<li>查看: <code>npm config get registry</code></li>
+</ul>
+<h1 id="blockchain"><a href="#blockchain" class="headerlink" title="blockchain"></a>blockchain</h1><p>作者从 hash 开始，逐步引入到 Coinbase </p>
+<h2 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h2><p>给定一些值，然后基于对应的 hash 算法，即可得到一串数字，称为 hash 值，如下图中输入 <code>hello</code>，生成了一串 hash 值</p>
+<p><img src="/web3/what-is-blockchain/image-20241214212940089.png" alt="image-20241214212940089"></p>
+<h2 id="block"><a href="#block" class="headerlink" title="block"></a>block</h2><p>block 则是在 hash 的基础上，加入了更多的传入值，<strong>共同决定生成的 hash 值</strong>，如果修改了其中任意一个的内容，那么 hash 值就会发生变化</p>
+<p><img src="/web3/what-is-blockchain/image-20241214213041716.png" alt="image-20241214213041716"></p>
+<p>如果期望最终的 hash 值，保持与未修改前的一致，那么其他内容也需要相应变化，比如下图将 <code>Data</code> 由空修改为了 <code>hello</code>，点击 <code>Mine</code> 后，<code>Nonce</code> 值发生了变化（72608 -&gt; 85869）</p>
+<p><img src="/web3/what-is-blockchain/image-20241214213337758.png" alt="image-20241214213337758"></p>
+<h2 id="blockchain-1"><a href="#blockchain-1" class="headerlink" title="blockchain"></a>blockchain</h2><p>blockchain 则是引入了更多的 block，不同 block 间通过 hash 值串接，可以看到，修改其中任意一个的内容时，修改点后续的内容都将发生变化</p>
+<p><img src="/web3/what-is-blockchain/image-20241214213529466.png" alt="image-20241214213529466"></p>
+<p>当然，如果想确保修改内容后，hash 值保持不变，只需要和修改单个 block 一样，重新计算即可，只不过这次需要计算的不再是单个 block，而是修改点后的所有 block</p>
+<h2 id="distributed"><a href="#distributed" class="headerlink" title="distributed"></a>distributed</h2><p>为了解决 blockchain 可以被篡改的问题，引入了分布式的 blockchain，即多条 blockchain，即使修改了一条 blockchain，也无法修改所有的 blockchain</p>
+<p><img src="/web3/what-is-blockchain/image-20241214214119176.png" alt="image-20241214214119176"></p>
+<h2 id="Tokens"><a href="#Tokens" class="headerlink" title="Tokens"></a>Tokens</h2><p>Tokens 在 demo 中是引入了交易的 distributed，如下多了 <code>Tx</code> 块</p>
+<p><img src="/web3/what-is-blockchain/image-20241214214213204.png" alt="image-20241214214213204"></p>
+<h2 id="Coinbase"><a href="#Coinbase" class="headerlink" title="Coinbase"></a>Coinbase</h2><p>Coinbase 则是在 Tokens 的基础上，引入了 <strong>Coinbase</strong> 的概念，即交易的资金原始来源（即币库），demo 中的 Coinbase 没有实际的用处，看着是为了规定 hash 值随便写的</p>
+<p><img src="/web3/what-is-blockchain/image-20241214214443329.png" alt="image-20241214214443329"></p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=_160oMzblY8">YouTube: Blockchain入门 - 可视化演示</a>, <a target="_blank" rel="noopener" href="https://github.com/anders94/blockchain-demo">anders94&#x2F;blockchain-demo</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">cv-programmer</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://bh.ecel.top/web3/what-is-blockchain/">http://bh.ecel.top/web3/what-is-blockchain/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://bh.ecel.top" target="_blank">cv-programmer</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/web3/">web3</a><a class="post-meta__tags" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/">区块链</a><a class="post-meta__tags" href="/tags/blockchain/">blockchain</a></div><div class="post_share"><div class="social-share" data-image="/image/blockchain.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/tutorial/cf-worker/"><img class="next-cover" src="/image/docker.jpg" onerror="onerror=null;src='/image/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">CF worker 使用</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/image/friend_404.gif'" alt="avatar"/><div class="author-info__name">cv-programmer</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">115</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cv-programmer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/cv-programmer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:usetologin@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Preface"><span class="toc-number">1.</span> <span class="toc-text">Preface</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#blockchain"><span class="toc-number">2.</span> <span class="toc-text">blockchain</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hash"><span class="toc-number">2.1.</span> <span class="toc-text">hash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#block"><span class="toc-number">2.2.</span> <span class="toc-text">block</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#blockchain-1"><span class="toc-number">2.3.</span> <span class="toc-text">blockchain</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#distributed"><span class="toc-number">2.4.</span> <span class="toc-text">distributed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tokens"><span class="toc-number">2.5.</span> <span class="toc-text">Tokens</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Coinbase"><span class="toc-number">2.6.</span> <span class="toc-text">Coinbase</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">3.</span> <span class="toc-text">Reference</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/web3/what-is-blockchain/" title="区块链简易 demo"><img src="/image/blockchain.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="区块链简易 demo"/></a><div class="content"><a class="title" href="/web3/what-is-blockchain/" title="区块链简易 demo">区块链简易 demo</a><time datetime="2024-12-14T12:39:20.000Z" title="发表于 2024-12-14 20:39:20">2024-12-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/tutorial/cf-worker/" title="CF worker 使用"><img src="/image/docker.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="CF worker 使用"/></a><div class="content"><a class="title" href="/tutorial/cf-worker/" title="CF worker 使用">CF worker 使用</a><time datetime="2024-09-22T02:03:26.000Z" title="发表于 2024-09-22 10:03:26">2024-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/tutorial/Makefile-with-ops/" title="Makefile 简化运维操作"><img src="/image/gnu.png" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="Makefile 简化运维操作"/></a><div class="content"><a class="title" href="/tutorial/Makefile-with-ops/" title="Makefile 简化运维操作">Makefile 简化运维操作</a><time datetime="2024-09-20T10:11:52.000Z" title="发表于 2024-09-20 18:11:52">2024-09-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/tutorial/div-miniserver/" title="Div 迷你主机"><img src="/image/linux.jpeg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="Div 迷你主机"/></a><div class="content"><a class="title" href="/tutorial/div-miniserver/" title="Div 迷你主机">Div 迷你主机</a><time datetime="2024-09-18T14:51:48.000Z" title="发表于 2024-09-18 22:51:48">2024-09-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理"><img src="/image/docker.jpg" onerror="this.onerror=null;this.src='/image/404.jpg'" alt="【Docker】01-构建时 secret 处理"/></a><div class="content"><a class="title" href="/cloud/docker-01-docker-build-secret/" title="【Docker】01-构建时 secret 处理">【Docker】01-构建时 secret 处理</a><time datetime="2024-08-17T07:37:36.000Z" title="发表于 2024-08-17 15:37:36">2024-08-17</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/image/blockchain.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By cv-programmer</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
