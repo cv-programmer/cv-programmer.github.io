@@ -197,6 +197,30 @@ document.addEventListener('DOMContentLoaded', function () {
           })
         }
       }
+      // 收起代码处理，遍历所有代码块元素，找到所有hider进行折叠style处理，来源 http://tangmingyou.com/2023/03/19/article/hexo+butterfly%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/index.html
+      $figureHighlight.forEach(function(item) {
+          const titleEle = item.querySelector('figcaption>span')
+          let hiderSymbol = 'hider'
+          let title;
+          if (titleEle && (title = titleEle.innerText) && (title === hiderSymbol || title.startsWith(hiderSymbol + ' '))) {
+              // 去掉hider符号
+              if (title === hiderSymbol) {
+                  const p = titleEle.parentNode
+                  titleEle.parentNode.removeChild(titleEle)
+                  p.parentNode.removeChild(p)
+              } else {
+                  titleEle.innerText = title.substring(hiderSymbol.length + 1)
+                  titleEle.parentNode.style.display = 'none'
+              }
+              // 箭头
+              item.querySelector('i.fa-angle-down').classList.add('closed')
+              // 隐藏代码
+              const code = item.querySelector('table')
+              if (code) {
+                  code.style.display = 'none'
+              }
+          }
+      })
     }
   }
 
