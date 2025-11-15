@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>用 golang 刷leetcode</title>
+      <link href="/interview/leetcode-go/"/>
+      <url>/interview/leetcode-go/</url>
+      
+        <content type="html"><![CDATA[<p>从零开始记录一下用 golang 刷 leetcode 的技巧</p><h1 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h1><h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul><li><p>遍历数组</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// for 循环</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">    fmt.Println(nums[i])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// range 循环</span></span><br><span class="line"><span class="keyword">for</span> i, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">    fmt.Println(i, num)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 区别</span></span><br><span class="line"><span class="comment">// 1. 语法: for 循环需要手动管理索引，而 range 循环更简洁。</span></span><br><span class="line"><span class="comment">// 2. 可读性: range 循环通常更容易理解。</span></span><br><span class="line"><span class="comment">// 3. 性能: 两者性能差异不大，但 range 循环在某些情况下更高效。</span></span><br><span class="line"><span class="comment">// 4. 元素访问: range 提供了直接访问元素值的方式。</span></span><br></pre></td></tr></table></figure></li></ul><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><h3 id="slice"><a href="#slice" class="headerlink" title="slice"></a>slice</h3><p>slice 是一个动态数组，类似于 C++ 的 vector</p><ul><li><p>创建一个 slice</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 make 创建空切片</span></span><br><span class="line">slice1 := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用字面量创建空切片</span></span><br><span class="line">slice2 := []<span class="type">int</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 两者区别</span></span><br><span class="line"><span class="comment">// 1. 长度与容量: make 可以直接指定长度和容量，适合已知长度的场景；字面量创建的切片则是空的。</span></span><br><span class="line"><span class="comment">// 2. 性能: 使用 make 可以减少内存分配次数，提高性能，特别是在计划添加多个元素时。</span></span><br><span class="line"><span class="comment">// 3. 初始化: make 创建的切片有默认值，而字面量创建的切片没有元素</span></span><br></pre></td></tr></table></figure></li><li><p>返回一个 slice</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回 []int 为例</span></span><br><span class="line"><span class="keyword">return</span> []<span class="type">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>&#125;</span><br></pre></td></tr></table></figure></li></ul><h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><ul><li><p>创建一个 map</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br></pre></td></tr></table></figure></li><li><p>判断元素是否在 map 存在</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法一</span></span><br><span class="line">dict := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>&#123;<span class="string">&quot;key1&quot;</span>: <span class="number">1</span>, <span class="string">&quot;key2&quot;</span>: <span class="number">2</span>&#125;</span><br><span class="line">value, ok := dict[<span class="string">&quot;key1&quot;</span>]</span><br><span class="line"><span class="keyword">if</span> ok &#123;</span><br><span class="line">    fmt.Printf(value)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">&quot;key1 不存在&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法二</span></span><br><span class="line">dict := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>&#123;<span class="string">&quot;key1&quot;</span>: <span class="number">1</span>, <span class="string">&quot;key2&quot;</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">if</span> value, ok := dict[<span class="string">&quot;key1&quot;</span>]; ok &#123;</span><br><span class="line">    fmt.Printf(value)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">&quot;key1 不存在&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li><p><a href="https://www.pseudoyu.com/zh/2021/05/29/algorithm_data_structure_go">LeetCode 刷题常用数据结构（Go 篇）</a></p></li><li><p><a href="https://www.cnblogs.com/Lusai/p/16701243.html">Go-ACM模式刷题常用函数和注意事项</a></p></li><li><p><a href="https://vocus.cc/article/6796e695fd89780001649dde">刷 LeetCode 常用的 Golang 小技巧</a></p></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 面试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> leetcode </tag>
+            
+            <tag> golang </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Ubuntu 常用技巧</title>
       <link href="/tools/The-trick-of-ubuntu/"/>
       <url>/tools/The-trick-of-ubuntu/</url>
@@ -1343,9 +1370,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> zsh </tag>
             
@@ -1401,9 +1428,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> vps </tag>
             
@@ -1459,9 +1486,9 @@
             
             <tag> docker </tag>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
         </tags>
       
@@ -1540,9 +1567,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> redis </tag>
             
@@ -1569,9 +1596,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> kafka </tag>
             
@@ -1600,9 +1627,9 @@
             
             <tag> MySQL </tag>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
         </tags>
       
@@ -1801,6 +1828,8 @@
             
             <tag> Linux </tag>
             
+            <tag> Apache </tag>
+            
             <tag> Nginx </tag>
             
             <tag> Windows </tag>
@@ -1808,8 +1837,6 @@
             <tag> 网站 </tag>
             
             <tag> ISS </tag>
-            
-            <tag> Apache </tag>
             
         </tags>
       
@@ -1836,9 +1863,9 @@
             
             <tag> MySQL </tag>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> Nginx </tag>
             
@@ -2020,9 +2047,9 @@
             
             <tag> 力扣 </tag>
             
-            <tag> dfs </tag>
-            
             <tag> 面试题 </tag>
+            
+            <tag> dfs </tag>
             
         </tags>
       
@@ -2049,9 +2076,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
             <tag> 面试题 </tag>
             
@@ -2113,9 +2140,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 力扣 </tag>
-            
             <tag> 数组 </tag>
+            
+            <tag> 力扣 </tag>
             
         </tags>
       
@@ -2167,9 +2194,9 @@
       
         <tags>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
             <tag> 硬盘 </tag>
             
@@ -2225,9 +2252,9 @@
             
             <tag> Go </tag>
             
-            <tag> 安装 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 安装 </tag>
             
         </tags>
       
@@ -2310,9 +2337,9 @@
             
             <tag> 算法 </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 树 </tag>
+            
+            <tag> 数组 </tag>
             
             <tag> Binary Indexed Tree </tag>
             
